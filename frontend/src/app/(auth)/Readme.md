@@ -1,0 +1,1 @@
+Estan son las rutas de registro y login
