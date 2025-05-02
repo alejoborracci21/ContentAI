@@ -7,6 +7,8 @@ export default function Login() {
     const password = formData.get("password");
     console.log("Email or Username:", username);
     console.log("Password:", password);
+
+    console.log("Login!");
   };
 
   return (
