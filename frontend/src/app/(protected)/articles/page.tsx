@@ -3,8 +3,8 @@
 export default function Articles() {
     return (
       <div>
-        <h1>Articles Page</h1>
-        <p>Welcome to the Articles!</p>
+        <h1>Articulos</h1>
+        <p>Bienvenido a los articulos publicados</p>
       </div>
     );
   }
