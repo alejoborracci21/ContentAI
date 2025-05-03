@@ -13,20 +13,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ContenAI",
-  description: "ContenAI is a platform for AI-generated content.",
+  title: "ContenAI - Genera blogs en segundos con IA",
+  description:
+    "Crea contenido SEO-friendly, atractivo y único en un clic con inteligencia artificial",
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+  children, 
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body className={` ${geistSans.variable} ${geistMono.variable} `}>
         {children}
       </body>
     </html>
