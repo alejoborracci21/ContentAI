@@ -1,32 +1,28 @@
 'use client';
 
+import { useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+
 export default function Register() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const onSubmit = (formData: FormData) => {
-    const username = formData.get("username");  
-    const password = formData.get("password");
-    console.log("Email or Username:", username);
-    console.log("Password:", password);
-
-    console.log("Register!");
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert('Usuario registrado correctamente');
+    } catch (error) {
+      alert('Error: ' + (error as Error).message);
+    }
   };
 
   return (
-    <form
-      className="flex flex-col gap-4 items-center justify-center bg-slate-100 p-4 rounded-md shadow-md text-black"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget as HTMLFormElement);
-        onSubmit(formData);
-      }}
-    >
-      <label htmlFor="username">Email or Username:</label>
-      <input className="border" type="text" id="username" name="username" required />
-      <br />
-      <label htmlFor="password">Password:</label>
-      <input className="border" type="password" id="password" name="password" required />
-      <br />
-      <button type="submit">Register</button>
+    <form onSubmit={handleRegister} className="flex flex-col gap-4 p-4 max-w-md mx-auto">
+      <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
+      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
+      <button type="submit">Registrar</button>
     </form>
   );
 }
