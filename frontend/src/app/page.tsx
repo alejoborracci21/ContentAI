@@ -26,7 +26,6 @@ export default function LandingPage() {
               <span className="font-bold text-xl">ContenAI</span>
             </Link>
             <nav className="hidden md:flex gap-6">
-
               <Link
                 href="#caracteristicas"
                 className="text-sm font-medium transition-colors hover:text-primary"
@@ -34,13 +33,13 @@ export default function LandingPage() {
                 Características
               </Link>
               <Link
-                href="#"
+                href="#descubre"
                 className="text-sm font-medium transition-colors hover:text-primary"
               >
-                Como funciona
+                Descubre
               </Link>
               <Link
-                href="#"
+                href="/pricing"
                 className="text-sm font-medium transition-colors hover:text-primary"
               >
                 Precios
@@ -176,7 +175,10 @@ export default function LandingPage() {
         </section>
 
         {/* Cómo funciona */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
+        <section
+          id="descubre"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gray-50"
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">

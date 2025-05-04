@@ -14,33 +14,55 @@ export default function ContactPage() {
               <span className="font-bold text-xl">ContenAI</span>
             </Link>
             <nav className="hidden md:flex gap-6">
-              <Link href="/" className="text-sm font-medium hover:text-primary">
-                Inicio
-              </Link>
               <Link
-                href="/#caracteristicas"
-                className="text-sm font-medium hover:text-primary"
+                href="#caracteristicas"
+                className="text-sm font-medium transition-colors hover:text-primary"
               >
                 Características
               </Link>
-              <Link href="#" className="text-sm font-medium hover:text-primary">
-                Precios
+              <Link
+                href="#descubre"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                Descubre
               </Link>
-              <Link href="#" className="text-sm font-medium hover:text-primary">
-                Blog
+              <Link
+                href="/pricing"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                Precios
               </Link>
               <Link
                 href="/contact"
-                className="text-sm font-medium hover:text-primary"
+                className="text-sm font-medium transition-colors hover:text-primary"
               >
                 Contacto
               </Link>
             </nav>
           </div>
           <Button className="hidden md:inline-flex p-0">
-            <Link href="/articles" className="p-2 px-5">
+            <Link href={"/articles"} className="p-2 px-5">
               Comenzar
             </Link>
+          </Button>
+          <Button variant="outline" size="icon" className="md:hidden">
+            <span className="sr-only">Menú</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-6 w-6"
+            >
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
           </Button>
         </div>
       </header>
@@ -72,7 +94,7 @@ export default function ContactPage() {
                 <CardContent className="p-6 flex flex-col items-center">
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
                     <Image
-                      src="/images/alejo.jpg"
+                      src="/placeholder.svg?height=40&width=40"
                       width={96}
                       height={96}
                       alt="Alejo Borracci"
@@ -95,7 +117,7 @@ export default function ContactPage() {
                 <CardContent className="p-6 flex flex-col items-center">
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
                     <Image
-                      src="/images/julio.jpg"
+                      src="/placeholder.svg?height=40&width=40"
                       width={96}
                       height={96}
                       alt="Julio Condor"
@@ -119,7 +141,7 @@ export default function ContactPage() {
                 <CardContent className="p-6 flex flex-col items-center">
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
                     <Image
-                      src="/images/jose.jpg"
+                      src="/placeholder.svg?height=40&width=40"
                       width={96}
                       height={96}
                       alt="José Alvarez"
@@ -143,7 +165,7 @@ export default function ContactPage() {
                 <CardContent className="p-6 flex flex-col items-center">
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
                     <Image
-                      src="/images/alexander.jpg"
+                      src="/placeholder.svg?height=40&width=40"
                       width={96}
                       height={96}
                       alt="Alexander Tasinchano"
@@ -169,7 +191,7 @@ export default function ContactPage() {
                 <CardContent className="p-6 flex flex-col items-center">
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
                     <Image
-                      src="/images/mario.jpg"
+                      src="/placeholder.svg?height=40&width=40"
                       width={96}
                       height={96}
                       alt="Mario Passalia"
