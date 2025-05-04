@@ -14,7 +14,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-
     useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -22,6 +21,7 @@ export default function LoginPage() {
     }
   }, [router]);
   
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
