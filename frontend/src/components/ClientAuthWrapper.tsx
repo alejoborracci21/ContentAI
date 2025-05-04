@@ -9,27 +9,12 @@ export default function ClientAuthWrapper({ children }: { children: React.ReactN
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      setLoading(false)
-    }
-  }
-  , [])
-
-
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        if (!token) {
-          setLoading(false)
-        }
         router.replace('/login')
       } else {
-        setLoading(false)
+        setLoading(false) 
       }
     })
 
