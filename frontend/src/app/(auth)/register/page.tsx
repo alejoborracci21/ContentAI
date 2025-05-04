@@ -19,7 +19,7 @@ export default function RegisterPage() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert('Registro exitoso');
-      router.push('/');
+      router.push('/login');
     } catch (error) {
       alert('Error: ' + (error as Error).message);
     }
