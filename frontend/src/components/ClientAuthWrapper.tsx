@@ -8,10 +8,20 @@ import { auth } from '@/lib/firebase'
 export default function ClientAuthWrapper({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const token = localStorage.getItem('token')
 
-  
+
   useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setLoading(false)
+    }
+  }
+  , [])
+
+
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         if (!token) {
@@ -24,7 +34,7 @@ export default function ClientAuthWrapper({ children }: { children: React.ReactN
     })
 
     return () => unsubscribe()
-  }, [router, token])
+  }, [router])
 
   if (loading) {
     return <div className="p-6">Cargando...</div>
