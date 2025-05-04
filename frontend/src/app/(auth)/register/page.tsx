@@ -8,17 +8,36 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { createUserInBackend } from '@/lib/api/users';
+import { useEffect } from 'react';
 
 export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
+  
+      useEffect(() => {
+          const token = localStorage.getItem('token');
+          if (token) {
+            router.push('/articles');
+          }
+        }, [router]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      const token = await auth.currentUser?.getIdToken();
+
+      if (token) {
+        createUserInBackend(token, {
+          nombre: name,
+        });
+      }
       alert('Registro exitoso');
       router.push('/login');
     } catch (error) {
@@ -44,6 +63,18 @@ export default function RegisterPage() {
               />
             </div>
             <div>
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="name"
+                placeholder="Juan Perez"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
               <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
@@ -59,11 +90,11 @@ export default function RegisterPage() {
             </Button>
           </form>
           <div className="mt-4 text-sm text-center">
-            ¿Ya tenés cuenta?{' '}
+            ¿Ya tenés cuenta?{" "}
             <button
               type="button"
               className="text-blue-600 underline hover:text-blue-800"
-              onClick={() => router.push('/login')}
+              onClick={() => router.push("/login")}
             >
               Iniciar sesión
             </button>
@@ -72,9 +103,9 @@ export default function RegisterPage() {
             <Button
               variant="outline"
               className="w-full mt-2"
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
             >
-            Volver al inicio
+              Volver al inicio
             </Button>
           </div>
         </CardContent>
