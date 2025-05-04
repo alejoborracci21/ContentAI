@@ -1,6 +1,4 @@
 "use client";
-
-
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -17,7 +15,7 @@ import {
   Edit3,
   Save,
 } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
   const router = useRouter();

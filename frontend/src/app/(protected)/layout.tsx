@@ -1,3 +1,5 @@
+"use client"
+
 import { Sidebar } from "@/components/Sidebar"
 import ClientAuthWrapper from "@/components/ClientAuthWrapper"
 
