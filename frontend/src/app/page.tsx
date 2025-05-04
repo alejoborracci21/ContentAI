@@ -21,7 +21,7 @@ export default function LandingPage() {
   const router = useRouter();
 
   const handleClick = () => {
-    const token = localStorage.getItem('firebaseToken') // o usá auth.currentUser?.getIdToken() si preferís
+    const token = localStorage.getItem('firebaseToken')
     if (token) {
       router.push('/articles')
     } else {
