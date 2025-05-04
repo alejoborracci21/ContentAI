@@ -14,6 +14,9 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const token = localStorage.getItem('token');
+  if (token) router.push('/articles');
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
