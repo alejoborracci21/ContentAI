@@ -1,10 +1,19 @@
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Zap, MessageSquare, FileText, Download, UserPlus, Settings, Edit3, Save } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Zap,
+  MessageSquare,
+  FileText,
+  Download,
+  UserPlus,
+  Settings,
+  Edit3,
+  Save,
+} from "lucide-react";
 
 export default function LandingPage() {
   return (
@@ -17,24 +26,37 @@ export default function LandingPage() {
               <span className="font-bold text-xl">ContenAI</span>
             </Link>
             <nav className="hidden md:flex gap-6">
-              <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
-                Inicio
-              </Link>
-              <Link href="#caracteristicas" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link
+                href="#caracteristicas"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
                 Características
               </Link>
-              <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link
+                href="#descubre"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                Descubre
+              </Link>
+              <Link
+                href="/pricing"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
                 Precios
               </Link>
-              <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
-                Blog
-              </Link>
-              <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link
+                href="/contact"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
                 Contacto
               </Link>
             </nav>
           </div>
-          <Button className="hidden md:inline-flex">Comenzar</Button>
+          <Button className="hidden md:inline-flex p-0">
+            <Link href={"/articles"} className="p-2 px-5">
+              Comenzar
+            </Link>
+          </Button>
           <Button variant="outline" size="icon" className="md:hidden">
             <span className="sr-only">Menú</span>
             <svg
@@ -71,9 +93,14 @@ export default function LandingPage() {
                     Crea contenido SEO-friendly, atractivo y único en un clic
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                    Empieza gratis
+                <div className="flex flex-col gap-2 min-[400px]:flex-row md:mx-0 mx-auto">
+                  <Button
+                    size="lg"
+                    className="bg-blue-600 hover:bg-blue-700 p-0"
+                  >
+                    <Link href={"/articles"} className="p-2.5 px-5">
+                      Empieza gratis
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -91,11 +118,16 @@ export default function LandingPage() {
         </section>
 
         {/* Características clave */}
-        <section id="caracteristicas" className="w-full py-12 md:py-24 lg:py-32 bg-white">
+        <section
+          id="caracteristicas"
+          className="w-full py-12 md:py-24 lg:py-32 bg-white"
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Características clave</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                  Características clave
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Todo lo que necesitas para crear contenido de calidad
                 </p>
@@ -115,14 +147,18 @@ export default function LandingPage() {
                 <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                   <MessageSquare className="h-12 w-12 text-blue-600 mb-4" />
                   <h3 className="text-lg font-bold">Tonos personalizables</h3>
-                  <p className="text-sm text-muted-foreground mt-2">Formal, amigable o técnico según tu audiencia</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Formal, amigable o técnico según tu audiencia
+                  </p>
                 </CardContent>
               </Card>
               <Card className="border-0 shadow-md">
                 <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                   <FileText className="h-12 w-12 text-blue-600 mb-4" />
                   <h3 className="text-lg font-bold">Formatos versátiles</h3>
-                  <p className="text-sm text-muted-foreground mt-2">Guías, listas, comparativas y más</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Guías, listas, comparativas y más
+                  </p>
                 </CardContent>
               </Card>
               <Card className="border-0 shadow-md">
@@ -139,11 +175,16 @@ export default function LandingPage() {
         </section>
 
         {/* Cómo funciona */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
+        <section
+          id="descubre"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gray-50"
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Cómo funciona</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                  Cómo funciona
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Genera contenido de calidad en cuatro simples pasos
                 </p>
@@ -155,28 +196,36 @@ export default function LandingPage() {
                   <UserPlus className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold">1. Regístrate</h3>
-                <p className="text-sm text-muted-foreground mt-2">Crea tu cuenta en segundos</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Crea tu cuenta en segundos
+                </p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 mb-4">
                   <Settings className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold">2. Define opciones</h3>
-                <p className="text-sm text-muted-foreground mt-2">Elige tema y configuración</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Elige tema y configuración
+                </p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 mb-4">
                   <Edit3 className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold">3. Genera y edita</h3>
-                <p className="text-sm text-muted-foreground mt-2">Personaliza el contenido</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Personaliza el contenido
+                </p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 mb-4">
                   <Save className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold">4. Publica o guarda</h3>
-                <p className="text-sm text-muted-foreground mt-2">Comparte o almacena tu contenido</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Comparte o almacena tu contenido
+                </p>
               </div>
             </div>
           </div>
@@ -187,21 +236,39 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Temas populares</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                  Temas populares
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Explora las categorías más solicitadas por nuestros usuarios
                 </p>
               </div>
             </div>
             <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-3 py-8">
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">Tecnología</Badge>
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">Marketing</Badge>
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">Salud</Badge>
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">Finanzas</Badge>
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">Viajes</Badge>
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">IA</Badge>
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">Educación</Badge>
-              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">Negocios</Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                Tecnología
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                Marketing
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                Salud
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                Finanzas
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                Viajes
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                IA
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                Educación
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-4 py-2 text-sm">
+                Negocios
+              </Badge>
             </div>
           </div>
         </section>
@@ -215,7 +282,8 @@ export default function LandingPage() {
                   Lo que dicen nuestros usuarios
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Descubre por qué ContenAI está transformando la creación de contenido
+                  Descubre por qué ContenAI está transformando la creación de
+                  contenido
                 </p>
               </div>
             </div>
@@ -228,12 +296,15 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <h3 className="text-lg font-bold">María Rodríguez</h3>
-                      <p className="text-sm text-muted-foreground">Marketing Manager</p>
+                      <p className="text-sm text-muted-foreground">
+                        Marketing Manager
+                      </p>
                     </div>
                   </div>
                   <p className="text-muted-foreground">
-                    &ldquo;ContenAI ha reducido nuestro tiempo de creación de contenido en un 70%. Ahora publicamos el doble
-                    de artículos con la mitad del esfuerzo.&rdquo;
+                    &ldquo;ContenAI ha reducido nuestro tiempo de creación de
+                    contenido en un 70%. Ahora publicamos el doble de artículos
+                    con la mitad del esfuerzo.&rdquo;
                   </p>
                 </CardContent>
               </Card>
@@ -245,12 +316,15 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <h3 className="text-lg font-bold">Javier López</h3>
-                      <p className="text-sm text-muted-foreground">Blogger Profesional</p>
+                      <p className="text-sm text-muted-foreground">
+                        Blogger Profesional
+                      </p>
                     </div>
                   </div>
                   <p className="text-muted-foreground">
-                    &ldquo;La calidad del contenido es impresionante. Los artículos generados requieren mínimas ediciones y el
-                    SEO está perfectamente optimizado.&rdquo;
+                    &ldquo;La calidad del contenido es impresionante. Los
+                    artículos generados requieren mínimas ediciones y el SEO
+                    está perfectamente optimizado.&rdquo;
                   </p>
                 </CardContent>
               </Card>
@@ -262,12 +336,15 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <h3 className="text-lg font-bold">Carmen Sánchez</h3>
-                      <p className="text-sm text-muted-foreground">CEO, TechStart</p>
+                      <p className="text-sm text-muted-foreground">
+                        CEO, TechStart
+                      </p>
                     </div>
                   </div>
                   <p className="text-muted-foreground">
-                  &ldquo;Hemos integrado ContenAI en nuestro flujo de trabajo y ha sido un cambio revolucionario. Recomiendo
-                    esta herramienta a cualquier equipo de contenido.&rdquo;
+                    &ldquo;Hemos integrado ContenAI en nuestro flujo de trabajo
+                    y ha sido un cambio revolucionario. Recomiendo esta
+                    herramienta a cualquier equipo de contenido.&rdquo;
                   </p>
                 </CardContent>
               </Card>
@@ -284,17 +361,27 @@ export default function LandingPage() {
                   ¿Listo para crear tu primer blog?
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Únete a nuestra comunidad y mantente al día con las últimas novedades
+                  Únete a nuestra comunidad y mantente al día con las últimas
+                  novedades
                 </p>
               </div>
               <div className="mx-auto w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
-                  <Input type="email" placeholder="Introduce tu email" className="max-w-lg flex-1" />
-                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                  <Input
+                    type="email"
+                    placeholder="Introduce tu email"
+                    className="max-w-lg flex-1"
+                  />
+                  <Button
+                    type="submit"
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
                     Suscríbete
                   </Button>
                 </form>
-                <p className="text-xs text-muted-foreground">Puedes darte de baja en cualquier momento</p>
+                <p className="text-xs text-muted-foreground">
+                  Puedes darte de baja en cualquier momento
+                </p>
               </div>
             </div>
           </div>
@@ -308,18 +395,30 @@ export default function LandingPage() {
             © 2025 ContenAI. Todos los derechos reservados.
           </p>
           <div className="flex gap-4">
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground underline-offset-4 hover:underline"
+            >
               Términos
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground underline-offset-4 hover:underline"
+            >
               Privacidad
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground underline-offset-4 hover:underline"
+            >
               Ayuda
             </Link>
           </div>
           <div className="flex gap-4">
-            <Link href="#" className="text-muted-foreground hover:text-foreground">
+            <Link
+              href="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -336,7 +435,10 @@ export default function LandingPage() {
               </svg>
               <span className="sr-only">Facebook</span>
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground">
+            <Link
+              href="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -353,7 +455,10 @@ export default function LandingPage() {
               </svg>
               <span className="sr-only">Twitter</span>
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground">
+            <Link
+              href="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -376,5 +481,5 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
