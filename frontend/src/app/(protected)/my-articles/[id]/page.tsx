@@ -28,8 +28,8 @@ export default function ArticleDetailPage() {
         <CardTitle>{article.title}</CardTitle>
         <CardDescription>
           <div className="flex gap-2 items-center">
-            <Badge variant="outline">{article.autor || "Desconocido"}</Badge>
-            <span className="text-xs text-muted-foreground">{article.date?.slice(0, 10)}</span>
+            <Badge variant="outline">{article.author || "Desconocido"}</Badge>
+            <span className="text-xs text-muted-foreground">{article.creationDate?.slice(0, 10)}</span>
           </div>
         </CardDescription>
       </CardHeader>

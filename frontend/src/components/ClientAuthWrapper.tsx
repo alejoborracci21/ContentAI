@@ -8,13 +8,16 @@ import { auth } from '@/lib/firebase'
 export default function ClientAuthWrapper({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        router.replace('/login')
+        // Token expirado o usuario no logueado
+        localStorage.removeItem('token')
+        router.replace('/')
       } else {
-        setLoading(false) 
+        // Usuario válido
+        setLoading(false)
       }
     })
 

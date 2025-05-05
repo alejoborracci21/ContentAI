@@ -33,7 +33,7 @@ export default function HistoryPage() {
     if (timeFilter === "all") return matchesSearch
 
     const daysAgo = timeFilter === "7days" ? 7 : 30
-    const articleDate = new Date(article.date || "")
+    const articleDate = new Date(article.creationDate || "")
     const now = new Date()
     const diffInDays = (now.getTime() - articleDate.getTime()) / (1000 * 60 * 60 * 24)
 
@@ -92,7 +92,7 @@ export default function HistoryPage() {
                   filteredArticles.map((article: Article) => (
                     <TableRow key={article.id}>
                       <TableCell className="font-medium">{article.title}</TableCell>
-                      <TableCell>{article.date}</TableCell>
+                      <TableCell>{article.creationDate}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button variant="ghost" size="icon" onClick={() => router.push(`/my-articles/${article.id}`)}>

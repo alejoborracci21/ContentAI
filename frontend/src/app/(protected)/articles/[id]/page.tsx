@@ -60,8 +60,8 @@ export default function ArticleDetailPage() {
         <CardHeader>
           <CardTitle className="text-2xl">{article.title}</CardTitle>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
-            <Badge variant="outline">{article.autor}</Badge>
-            <span>{article.date || '01/01/2025'}</span>
+            <Badge variant="outline">{article.author}</Badge>
+            <span>{article.publicationDate}</span>
           </div>
         </CardHeader>
         <Separator />
