@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Edit, Eye, Trash2, Search } from "lucide-react"
-import { myArticles } from "@/lib/api/articles"
-import { Article } from "@/lib/api/articles"
+import { Eye, Trash2, Search } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { myArticles, deleteArticle, Article } from "@/lib/api/articles"
+
 export default function HistoryPage() {
   const [articles, setArticles] = useState<Article[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [timeFilter, setTimeFilter] = useState("all")
+  const router = useRouter()
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -23,14 +25,27 @@ export default function HistoryPage() {
         console.error("Error al cargar artículos:", error)
       }
     }
-
     fetchArticles()
   }, [])
 
-  // Filtrar artículos por término de búsqueda
-  const filteredArticles = articles.filter((article: Article) =>
-    article.titulo.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredArticles = articles.filter((article: Article) => {
+    const matchesSearch = article.titulo.toLowerCase().includes(searchTerm.toLowerCase())
+    if (timeFilter === "all") return matchesSearch
+
+    const daysAgo = timeFilter === "7days" ? 7 : 30
+    const articleDate = new Date(article.date || "")
+    const now = new Date()
+    const diffInDays = (now.getTime() - articleDate.getTime()) / (1000 * 60 * 60 * 24)
+
+    return matchesSearch && diffInDays <= daysAgo
+  })
+
+  const handleDelete = async (id: string) => {
+    if (confirm("¿Estás seguro de eliminar este artículo?")) {
+      await deleteArticle(id)
+      setArticles((prev) => prev.filter((a) => a.id !== id))
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -80,17 +95,11 @@ export default function HistoryPage() {
                       <TableCell>{article.date}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" onClick={() => router.push(`/my-articles/${article.id}`)}>
                             <Eye className="h-4 w-4" />
-                            <span className="sr-only">Ver</span>
                           </Button>
-                          <Button variant="ghost" size="icon">
-                            <Edit className="h-4 w-4" />
-                            <span className="sr-only">Editar</span>
-                          </Button>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" onClick={() => handleDelete(article.id)}>
                             <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Eliminar</span>
                           </Button>
                         </div>
                       </TableCell>
@@ -110,4 +119,4 @@ export default function HistoryPage() {
       </Card>
     </div>
   )
-}
+} 

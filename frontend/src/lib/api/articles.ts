@@ -21,7 +21,6 @@ export interface Article {
       if (!res.ok) throw new Error("Error al obtener artículos")
   
       const data = await res.json()
-      console.log("Data:", data)
       return data 
     } catch (error) {
       console.error("Error en fetchArticles:", error)
@@ -37,7 +36,6 @@ export interface Article {
   
       if (!res) throw new Error("Error al obtener el artículo")
   
-      console.log("Article:", article)
       return article || null
     } catch (error) {
       console.error("Error en fetchArticleById:", error)
@@ -59,7 +57,6 @@ export interface Article {
     if (!res.ok) throw new Error("Error al obtener artículos")
   
     const data = await res.json()
-    console.log("Data:", data)
     return Array.isArray(data) ? data : []
   }
 
@@ -79,4 +76,39 @@ export interface Article {
   
     const article = await res.json()
     return article
+  }
+
+
+  export async function updateArticle(id: string, data: { title: string; content: string }) {
+    const token = localStorage.getItem("token")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/actulizarArticulo/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+  
+    if (!res.ok) throw new Error("Error al actualizar artículo")
+  
+    const article = await res.json()
+    console.log("Article actualizado:", article)
+    return article
+  }
+
+
+  export async function deleteArticle(id: string) {
+    const token = localStorage.getItem("token")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/eliminarArticulo/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  
+    if (!res.ok) throw new Error("Error al eliminar artículo")
+  
+    return true
   }
