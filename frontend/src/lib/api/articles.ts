@@ -22,7 +22,7 @@ export interface Article {
   
       const data = await res.json()
       console.log("Data:", data)
-      return data
+      return data 
     } catch (error) {
       console.error("Error en fetchArticles:", error)
       return []
@@ -43,4 +43,40 @@ export interface Article {
       console.error("Error en fetchArticleById:", error)
       return null
     }
+  }
+
+
+  export async function myArticles(): Promise<Article[]> {
+    const token = localStorage.getItem("token")
+    console.log("Token:", token)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/articulos`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  
+    if (!res.ok) throw new Error("Error al obtener artículos")
+  
+    const data = await res.json()
+    console.log("Data:", data)
+    return Array.isArray(data) ? data : []
+  }
+
+
+  export async function createArticle(data: { title: string; content: string }) {
+    const token = localStorage.getItem("token")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/createArticulo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+  
+    if (!res.ok) throw new Error("Error al crear artículo")
+  
+    const article = await res.json()
+    return article
   }
