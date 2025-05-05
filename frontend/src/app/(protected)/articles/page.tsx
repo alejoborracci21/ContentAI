@@ -67,8 +67,8 @@ export default function ArticlesPage() {
                 articles.map((article) => (
                   <TableRow key={article.id}>
                     <TableCell className="font-medium">{article.title}</TableCell>
-                    <TableCell>{article.autor}</TableCell>
-                    <TableCell>{article.date || "01/01/2025"}</TableCell>
+                    <TableCell>{article.author}</TableCell>
+                    <TableCell>{article.publicationDate}</TableCell>
                     <TableCell className="text-right">
                       <Button asChild variant="outline" size="sm">
                         <Link href={`/articles/${article.id}`}>

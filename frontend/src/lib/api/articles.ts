@@ -1,9 +1,10 @@
 export interface Article {
     id: string
     title: string
-    autor: string
+    author: string
     content: string
-    date?: string
+    creationDate?: string
+    publicationDate?: boolean
   }
 
   const url = process.env.NEXT_PUBLIC_BACKEND_URL
@@ -41,13 +42,12 @@ export interface Article {
     if (!res.ok) throw new Error("Error al obtener artículo")
       
       const data = await res.json()
-    return data || null
+    return data[0] || null
   }
 
 
   export async function myArticles(): Promise<Article[]> {
     const token = localStorage.getItem("token")
-    console.log("Token:", token)
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/articulos`, {
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export interface Article {
       },
     })
   
-    if (!res.ok) throw new Error("Error al obtener artículos")
+    if (!res.ok) return []
   
     const data = await res.json()
     return Array.isArray(data) ? data : []
