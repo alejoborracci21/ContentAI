@@ -66,7 +66,7 @@ export default function ArticlesPage() {
               {articles.length > 0 ? (
                 articles.map((article) => (
                   <TableRow key={article.id}>
-                    <TableCell className="font-medium">{article.titulo}</TableCell>
+                    <TableCell className="font-medium">{article.title}</TableCell>
                     <TableCell>{article.autor}</TableCell>
                     <TableCell>{article.date || "01/01/2025"}</TableCell>
                     <TableCell className="text-right">

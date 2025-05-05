@@ -18,8 +18,8 @@ export default function EditArticlePage() {
     async function loadArticle() {
       const data = await fetchArticleById(id as string)
       if (data) {
-        setTitle(data.titulo)
-        setContent(data.contenido)
+        setTitle(data.title)
+        setContent(data.content)
       }
     }
     loadArticle()
