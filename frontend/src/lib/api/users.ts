@@ -1,5 +1,7 @@
+
+const url = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export async function createUserInBackend(token: string, data: {nombre: string }) {
-  const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const res = await fetch(`${url}/auth/register`, {
     method: 'POST',
@@ -18,7 +20,6 @@ export async function createUserInBackend(token: string, data: {nombre: string }
 }
 
 export async function getUserInBackend(token: string) {
-  const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const res = await fetch(`${url}/auth/user`, {
     method: 'GET',
