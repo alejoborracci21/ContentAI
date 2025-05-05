@@ -20,11 +20,6 @@ export default function LoginPage() {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     const token = await user.getIdToken();
-
-    console.log('Token:', token);
-    console.log('User:', user);
-    console.log('User credential:', userCredential);
-
     localStorage.setItem('token', token);
 
     try {

@@ -1,8 +1,8 @@
 export interface Article {
     id: string
-    titulo: string
+    title: string
     autor: string
-    contenido: string
+    content: string
     date?: string
   }
 
@@ -30,17 +30,18 @@ export interface Article {
   
 
   export async function fetchArticleById(id: string | number): Promise<Article | null> {
-    try {
-      const res = await fetchArticles()
-      const article = res.find((article) => String(article.id) === String(id))
-  
-      if (!res) throw new Error("Error al obtener el artículo")
-  
-      return article || null
-    } catch (error) {
-      console.error("Error en fetchArticleById:", error)
-      return null
-    }
+    const token = localStorage.getItem("token")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/obtenerArticulo?id=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (!res.ok) throw new Error("Error al obtener artículo")
+      
+      const data = await res.json()
+    return data || null
   }
 
 
@@ -81,7 +82,7 @@ export interface Article {
 
   export async function updateArticle(id: string, data: { title: string; content: string }) {
     const token = localStorage.getItem("token")
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/actulizarArticulo/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/actualizarArticulo?id=${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -93,14 +94,13 @@ export interface Article {
     if (!res.ok) throw new Error("Error al actualizar artículo")
   
     const article = await res.json()
-    console.log("Article actualizado:", article)
     return article
   }
 
 
   export async function deleteArticle(id: string) {
     const token = localStorage.getItem("token")
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/eliminarArticulo/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/articulo/eliminarArticulo?id=${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

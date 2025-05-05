@@ -15,7 +15,6 @@ export default function ArticleDetailPage() {
   useEffect(() => {
     async function fetchArticle() {
       const res = await fetchArticleById(id as string)
-      console.log("Article desde pagina:", res)
       setArticle(res)
     }
     fetchArticle()
@@ -26,7 +25,7 @@ export default function ArticleDetailPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{article.titulo}</CardTitle>
+        <CardTitle>{article.title}</CardTitle>
         <CardDescription>
           <div className="flex gap-2 items-center">
             <Badge variant="outline">{article.autor || "Desconocido"}</Badge>
@@ -35,7 +34,7 @@ export default function ArticleDetailPage() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="whitespace-pre-line">{article.contenido}</p>
+        <p className="whitespace-pre-line">{article.content}</p>
         <div className="flex gap-2 justify-end">
           <Button variant="outline" onClick={() => router.push(`/my-articles/${article.id}/edit`)}>
             Editar
