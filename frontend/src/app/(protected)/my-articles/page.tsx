@@ -29,7 +29,7 @@ export default function HistoryPage() {
   }, [])
 
   const filteredArticles = articles.filter((article: Article) => {
-    const matchesSearch = article.titulo.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase())
     if (timeFilter === "all") return matchesSearch
 
     const daysAgo = timeFilter === "7days" ? 7 : 30
@@ -91,7 +91,7 @@ export default function HistoryPage() {
                 {filteredArticles.length > 0 ? (
                   filteredArticles.map((article: Article) => (
                     <TableRow key={article.id}>
-                      <TableCell className="font-medium">{article.titulo}</TableCell>
+                      <TableCell className="font-medium">{article.title}</TableCell>
                       <TableCell>{article.date}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
