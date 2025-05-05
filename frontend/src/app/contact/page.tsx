@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -8,19 +9,30 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
 import { MoonIcon, SunMediumIcon } from "lucide-react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function ContactPage() {
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Detecta si el usuario está logueado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleClick = () => {
-    const token = localStorage.getItem("firebaseToken");
-    if (token) {
+    if (isAuthenticated) {
       router.push("/articles");
     } else {
       router.push("/login");
     }
   };
-  // dads
+
+  // Tema
   const { theme, setTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
 

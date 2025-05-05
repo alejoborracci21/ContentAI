@@ -16,19 +16,19 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    const token = await user.getIdToken();
-    localStorage.setItem('token', token);
 
     try {
-      if(!token) throw new Error('El usuario no existe o no tiene token');
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
+      if (!user) throw new Error('No se pudo autenticar al usuario');
+
+      // Firebase se encarga de la sesión, no hace falta guardar el token
       alert('Login exitoso');
       router.push('/articles');
+
     } catch (error) {
-      alert('Error: ' + (error as Error).message);
+      alert('Error al iniciar sesión: ' + (error as Error).message);
     }
   };
 
@@ -80,7 +80,7 @@ export default function LoginPage() {
               className="w-full mt-2"
               onClick={() => router.push('/')}
             >
-            Volver al inicio
+              Volver al inicio
             </Button>
           </div>
         </CardContent>
