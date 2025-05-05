@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -14,20 +14,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-    useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      router.push('/articles');
-    }
-  }, [router]);
-  
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     const token = await user.getIdToken();
+
+    console.log('Token:', token);
+    console.log('User:', user);
+    console.log('User credential:', userCredential);
 
     localStorage.setItem('token', token);
 
