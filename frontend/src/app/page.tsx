@@ -14,23 +14,44 @@ import {
   Settings,
   Edit3,
   Save,
+  MoonIcon,
+  SunMediumIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+import { useTheme } from "next-themes";
+import { Switch } from "@/components/ui/switch";
+import { useEffect, useState } from "react";
 
 export default function LandingPage() {
   const router = useRouter();
 
   const handleClick = () => {
-    const token = localStorage.getItem('firebaseToken')
+    const token = localStorage.getItem("firebaseToken");
     if (token) {
-      router.push('/articles')
+      router.push("/articles");
     } else {
-      router.push('/login')
+      router.push("/login");
     }
-  }
+  };
+  // dads
+  const { theme, setTheme } = useTheme();
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
+  useEffect(() => {
+    setIsDarkMode(theme === "dark");
+  }, [theme]);
+
+  const handleToggle = (checked: boolean) => {
+    setIsDarkMode(checked);
+    setTheme(checked ? "dark" : "light");
+  };
+  // dasd
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative">
+            <div className="absolute top-0 z-[-2] h-full w-screen rotate-180 transform  bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(19,91,246)_200%)]"></div>
+          <div className="flex min-h-screen flex-col">
+
       {/* Barra de navegación */}
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
@@ -52,12 +73,6 @@ export default function LandingPage() {
                 Descubre
               </Link>
               <Link
-                href="/pricing"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Precios
-              </Link>
-              <Link
                 href="/contact"
                 className="text-sm font-medium transition-colors hover:text-primary"
               >
@@ -65,49 +80,70 @@ export default function LandingPage() {
               </Link>
             </nav>
           </div>
-          <Button onClick={handleClick} className="hidden md:inline-flex p-0">
-              Comenzar
-          </Button>
-          <Button variant="outline" size="icon" className="md:hidden">
-            <span className="sr-only">Menú</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6"
+          <div className="flex gap-2">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="theme-mode"
+                checked={isDarkMode}
+                onCheckedChange={handleToggle}
+                thumbClassName="h-7 w-7 data-[state=checked]:translate-x-6"
+                className="h-8 w-14"
+                icon={
+                  isDarkMode ? (
+                    <MoonIcon className="h-4 w-4" />
+                  ) : (
+                    <SunMediumIcon className="h-4 w-4" />
+                  )
+                }
+              />
+            </div>
+            <Button
+              onClick={handleClick}
+              className="hidden md:inline-flex py-4 px-6"
             >
-              <line x1="4" x2="20" y1="12" y2="12" />
-              <line x1="4" x2="20" y1="6" y2="6" />
-              <line x1="4" x2="20" y1="18" y2="18" />
-            </svg>
-          </Button>
+              Comenzar
+            </Button>
+            <Button variant="outline" size="icon" className="md:hidden ml-4">
+              <span className="sr-only">Menú</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6"
+              >
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </svg>
+            </Button>
+          </div>
         </div>
       </header>
 
       <main className="flex-1">
         {/* Sección Hero */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-blue-50 to-white">
+        <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none dark:text-white">
                     Genera blogs en segundos con IA
                   </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                  <p className="max-w-[600px] text-muted-foreground md:text-xl dark:text-gray-400">
                     Crea contenido SEO-friendly, atractivo y único en un clic
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row md:mx-0 mx-auto">
                   <Button
                     size="lg"
-                    className="bg-blue-600 hover:bg-blue-700 p-0"
+                    className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 p-0"
                   >
                     <Link href={"/articles"} className="p-2.5 px-5">
                       Empieza gratis
@@ -117,9 +153,9 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center justify-center">
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  width={400}
-                  height={400}
+                  src="/AIwritter.png"
+                  width={600}
+                  height={600}
                   alt="ContenAI Ilustración"
                   className="rounded-lg object-cover"
                 />
@@ -127,11 +163,10 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
         {/* Características clave */}
         <section
           id="caracteristicas"
-          className="w-full py-12 md:py-24 lg:py-32 bg-white"
+          className="w-full py-12 md:py-24 lg:py-32"
         >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -186,10 +221,7 @@ export default function LandingPage() {
         </section>
 
         {/* Cómo funciona */}
-        <section
-          id="descubre"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gray-50"
-        >
+        <section id="descubre" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -243,7 +275,7 @@ export default function LandingPage() {
         </section>
 
         {/* Temas populares */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-white">
+        <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -285,7 +317,7 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonios */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
+        <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -364,7 +396,7 @@ export default function LandingPage() {
         </section>
 
         {/* Únete a la comunidad */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-blue-50">
+        <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -379,6 +411,7 @@ export default function LandingPage() {
               <div className="mx-auto w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
                   <Input
+                    suppressHydrationWarning
                     type="email"
                     placeholder="Introduce tu email"
                     className="max-w-lg flex-1"
@@ -492,5 +525,7 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+    </div>
+
   );
 }
