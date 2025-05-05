@@ -16,10 +16,22 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    const token = await user.getIdToken();
+
+    console.log('Token:', token);
+    console.log('User:', user);
+    console.log('User credential:', userCredential);
+
+    localStorage.setItem('token', token);
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      if(!token) throw new Error('El usuario no existe o no tiene token');
+
       alert('Login exitoso');
-      router.push('/'); // Redirige al home si el login es correcto
+      router.push('/articles');
     } catch (error) {
       alert('Error: ' + (error as Error).message);
     }

@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -14,8 +15,20 @@ import {
   Edit3,
   Save,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    const token = localStorage.getItem('firebaseToken')
+    if (token) {
+      router.push('/articles')
+    } else {
+      router.push('/login')
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Barra de navegación */}
@@ -52,10 +65,8 @@ export default function LandingPage() {
               </Link>
             </nav>
           </div>
-          <Button className="hidden md:inline-flex p-0">
-            <Link href={"/articles"} className="p-2 px-5">
+          <Button onClick={handleClick} className="hidden md:inline-flex p-0">
               Comenzar
-            </Link>
           </Button>
           <Button variant="outline" size="icon" className="md:hidden">
             <span className="sr-only">Menú</span>
