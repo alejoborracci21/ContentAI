@@ -58,7 +58,7 @@ export default function ArticleDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{article.titulo}</CardTitle>
+          <CardTitle className="text-2xl">{article.title}</CardTitle>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
             <Badge variant="outline">{article.autor}</Badge>
             <span>{article.date || '01/01/2025'}</span>
@@ -67,7 +67,7 @@ export default function ArticleDetailPage() {
         <Separator />
         <CardContent>
           <article className="prose prose-neutral max-w-none whitespace-pre-line">
-            {article.contenido}
+            {article.content}
           </article>
         </CardContent>
       </Card>
