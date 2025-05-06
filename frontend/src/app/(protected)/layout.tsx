@@ -9,6 +9,7 @@ import { MoonIcon, SunMediumIcon } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 import "../globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function ProtectedLayout({
   children,
@@ -31,7 +32,6 @@ export default function ProtectedLayout({
   return (
     <div className="relative ">
       <div className="absolute inset-0 -z-10 h-full w-full  bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-
 
       <div className="absolute -z-10 bottom-0 left-0 right-0 top-0 dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] "></div>
 
@@ -58,6 +58,7 @@ export default function ProtectedLayout({
             </div>
             {children}
           </main>
+          <Toaster/>
         </SidebarProvider>
       </ClientAuthWrapper>
     </div>
