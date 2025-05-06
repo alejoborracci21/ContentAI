@@ -1,15 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  FileText,
-  FilePlus,
-  Sparkles,
-  User,
-  Feather,
-} from "lucide-react";
-
+import { FileText, FilePlus, Sparkles, User, Feather } from "lucide-react";
 
 import {
   Sidebar,
@@ -23,6 +17,9 @@ import {
 } from "@/components/ui/sidebar";
 import { NavUser } from "./navUser";
 
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { getUserInBackend } from "@/lib/api/users";
 
 const links = [
   { href: "/articles", label: "Artículos publicados", icon: FileText },
@@ -31,33 +28,50 @@ const links = [
   { href: "/profile", label: "Tu perfil", icon: User },
 ];
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com"
-  },
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const router = useRouter();
-  const handleClick = () => {
-      router.push("/");
+  const [userProfile, setUserProfile] = useState<{
+    name: string;
+    email: string;
+    uid: string;
+  } | null>(null);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
+      if (!firebaseUser) {
+        router.replace("/login");
+        return;
+      }
+
+      try {
+        const token = await firebaseUser.getIdToken();
+        const profile = await getUserInBackend(token);
+        setUserProfile(profile);
+      } catch (err) {
+        console.error("Error al cargar perfil de backend:", err);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
+  const handleClick = () => {
+    router.push("/");
   };
+
   return (
     <Sidebar collapsible="icon" className="bg-background" {...props}>
-      <SidebarHeader className="bg-background items-center flex-row justify-center">
-        
+      <SidebarHeader className="bg-background flex-row items-center justify-center">
         <SidebarMenuButton
           onClick={handleClick}
           size="lg"
-          className=" data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
         >
           <div className="flex aspect-square size-7 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <Feather  className="size-5" />
+            <Feather className="size-5" />
           </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
+          <div className="flex-1 grid text-left text-sm leading-tight">
             <span className="truncate font-semibold">ContentAI</span>
           </div>
         </SidebarMenuButton>
@@ -84,12 +98,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter className="px-2 bg-background">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className=" ">
-              <NavUser user={data.user} />
+            <SidebarMenuButton asChild>
+              {/* Si userProfile es null, muestra "Cargando..." */}
+              <NavUser
+                user={
+                  userProfile ?? {
+                    name: "Cargando...",
+                    email: "",
+                    uid: "",
+                  }
+                }
+              />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );

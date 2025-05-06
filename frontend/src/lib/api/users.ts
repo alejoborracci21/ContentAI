@@ -6,7 +6,7 @@ export async function createUserInBackend(token: string, data: { nombre: string 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   });
@@ -24,11 +24,11 @@ export async function createUserInBackend(token: string, data: { nombre: string 
 
 export async function getUserInBackend(token: string) {
 
-  const res = await fetch(`${url}/auth/user`, {
-    method: 'GET',
+  const res = await fetch(`${url}/auth/login`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `${token}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
