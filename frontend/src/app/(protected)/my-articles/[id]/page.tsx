@@ -21,7 +21,7 @@ export default function ArticleDetailPage() {
   }, [id])
 
   if (!article) return <div className="p-6">Cargando artículo...</div>
-
+  
   return (
     <Card>
       <CardHeader>
