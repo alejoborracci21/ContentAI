@@ -13,7 +13,6 @@ const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function fetchArticles(): Promise<Article[]> {
   const token = await getFirebaseToken();
-  console.log("Token:", token);
 
   if (!token) return [];
 
@@ -35,7 +34,6 @@ export async function fetchArticles(): Promise<Article[]> {
 
 export async function fetchArticleById(id: string | number): Promise<Article | null> {
   const token = await getFirebaseToken();
-  console.log("Token:", token);
 
   if (!token) return null;
 
@@ -53,7 +51,6 @@ export async function fetchArticleById(id: string | number): Promise<Article | n
 
 export async function myArticles(): Promise<Article[]> {
   const token = await getFirebaseToken();
-  console.log("Token:", token);
 
   if (!token) return [];
 
@@ -71,7 +68,6 @@ export async function myArticles(): Promise<Article[]> {
 
 export async function createArticle(data: { title: string; content: string }) {
   const token = await getFirebaseToken();
-  console.log("Token:", token);
   if (!token) throw new Error("Usuario no autenticado");
 
   const res = await fetch(`${url}/articulo/createArticulo`, {
