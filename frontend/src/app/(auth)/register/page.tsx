@@ -18,6 +18,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { createUserInBackend } from '@/lib/api/users';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -32,6 +37,15 @@ export default function RegisterPage() {
     if (token) {
       router.push("/articles");
     }
+
+  // Si el usuario ya está logueado, redirigir
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        router.push('/articles');
+      }
+    });
+    return () => unsubscribe();
   }, [router]);
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -39,8 +53,14 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      const token = await auth.currentUser?.getIdToken();
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (!user) throw new Error('No se pudo registrar el usuario');
+      const token = await user.getIdToken();
+
+      // Enviar los datos al backend
+      await createUserInBackend(token, { nombre: name });
 
       if (token) {
         await createUserInBackend(token, {
