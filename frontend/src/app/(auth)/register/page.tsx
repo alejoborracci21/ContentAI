@@ -18,11 +18,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { createUserInBackend } from '@/lib/api/users';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -32,17 +27,11 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      router.push("/articles");
-    }
-
   // Si el usuario ya está logueado, redirigir
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        router.push('/articles');
+        router.push("/articles");
       }
     });
     return () => unsubscribe();
@@ -53,28 +42,23 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
-      if (!user) throw new Error('No se pudo registrar el usuario');
+      if (!user) throw new Error("No se pudo registrar el usuario");
       const token = await user.getIdToken();
 
       // Enviar los datos al backend
       await createUserInBackend(token, { nombre: name });
-
-      if (token) {
-        await createUserInBackend(token, {
-          nombre: name,
-        });
-        toast({
-          title: "Registro exitoso",
-          description: "Redirigiendo al login...",
-          variant:"blue"
-        });
-        router.push("/login");
-      } else {
-        throw new Error("No se pudo obtener el token");
-      }
+      toast({
+        title: "Registro exitoso",
+        description: "Ahora puedes iniciar sesión",
+        variant: "blue",
+      });
     } catch (error) {
       toast({
         title: "Error al registrarse",
@@ -88,14 +72,16 @@ export default function RegisterPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
-      <div className="absolute top-0 -z-10 h-full w-full "><div className="absolute left-1/2  h-[500px] w-[500px] -translate-x-[50%] translate-y-[50%] rounded-full bg-[rgba(90,128,252,0.47)] opacity-60 blur-[180px]"></div></div>
+      <div className="absolute top-0 -z-10 h-full w-full ">
+        <div className="absolute left-1/2  h-[500px] w-[500px] -translate-x-[50%] translate-y-[50%] rounded-full bg-[rgba(90,128,252,0.47)] opacity-60 blur-[180px]"></div>
+      </div>
       <Toaster />
       <div className="flex flex-col gap-2 w-full max-w-md">
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-xl">Crear cuenta</CardTitle>
             <CardDescription>
-              Completá los campos para registrarte
+              Completa los campos para registrarte
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -113,6 +99,11 @@ export default function RegisterPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="name">Nombre completo</Label>
+                {name.length > 0 && name.length < 10 && (
+                  <p className="text-xs text-red-500">
+                    El nombre debe tener al menos 10 caracteres.
+                  </p>
+                )}
                 <Input
                   id="name"
                   type="text"
@@ -120,6 +111,7 @@ export default function RegisterPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
+                  minLength={10}
                 />
               </div>
               <div className="grid gap-2">
@@ -161,9 +153,9 @@ export default function RegisterPage() {
           </CardContent>
         </Card>
         <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </div>
+          By clicking continue, you agree to our{" "}
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </div>
       </div>
     </main>
   );

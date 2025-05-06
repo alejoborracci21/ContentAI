@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -24,6 +24,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+    // Si el usuario ya está logueado, redirigir
+    useEffect(() => {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          router.push('/articles');
+        }
+      });
+      return () => unsubscribe();
+    }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
