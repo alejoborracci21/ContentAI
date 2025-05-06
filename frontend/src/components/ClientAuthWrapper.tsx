@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import LoadingIcon from "./ui/loadingIcon";
 
 export default function ClientAuthWrapper({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,7 @@ export default function ClientAuthWrapper({ children }: { children: React.ReactN
   }, [router]);
 
   if (loading) {
-    return <div className="p-6">Cargando...</div>;
+    return <LoadingIcon/>;
   }
 
   return <>{children}</>;
