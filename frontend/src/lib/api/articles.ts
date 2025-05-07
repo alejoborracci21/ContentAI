@@ -6,7 +6,7 @@ export interface Article {
   author: string;
   content: string;
   creationDate?: string;
-  publicationDate?: boolean;
+  publicationDate?: string;
 }
 
 const url = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -81,6 +81,25 @@ export async function createArticle(data: { title: string; content: string }) {
   if (!res.ok) throw new Error("Error al crear artículo");
   return await res.json();
 }
+
+export async function createArticlesWithIA(data: { tema: string; palabrasClave: string, tonoTexto: string, Longitud: string }) { 
+  const token = await getFirebaseToken();
+
+  if (!token) throw new Error("Usuario no autenticado");
+
+  const res = await fetch(`${url}/articulo/createArticulo/ia`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body:JSON.stringify(data)
+  });
+
+  if (!res.ok) throw new Error("Error al crear artículo con IA");
+  return await res.json();
+}
+
 
 export async function updateArticle(id: string, data: { title: string; content: string }) {
   const token = await getFirebaseToken();

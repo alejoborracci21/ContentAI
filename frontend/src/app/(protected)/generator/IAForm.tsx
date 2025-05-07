@@ -1,33 +1,55 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 import {
-  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
+import { createArticlesWithIA } from "@/lib/api/articles"
 
 export default function IAForm({ onBack }: { onBack: () => void }) {
+  const [tema, setTema] = useState("")
+  const [palabrasClave, setPalabrasClave] = useState("")
+  const [tonoTexto, setTonoTexto] = useState("formal")
+  const [formato, setFormato] = useState("guide")  // si tu API lo necesitase
+  const [longitud, setLongitud] = useState("medium")
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
   const [generatedContent, setGeneratedContent] = useState("")
 
-  const handleGenerate = (e: React.FormEvent) => {
+  const handleGenerate = async (e: React.FormEvent) => {
+    
     e.preventDefault()
     setIsGenerating(true)
-
-    setTimeout(() => {
-      setIsGenerating(false)
+    try {
+      const result = await createArticlesWithIA({
+        tema,
+        palabrasClave,
+        tonoTexto,
+        Longitud: longitud,
+      })
+      setGeneratedContent(result.content ?? JSON.stringify(result))
       setIsGenerated(true)
-      setGeneratedContent(
-        "Artículo generado por IA: Lorem ipsum dolor sit amet..."
-      )
-    }, 2000)
+    } catch (err) {
+      console.error("Error generando artículo:", err)
+      alert("Ocurrió un error al generar el artículo.")
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   if (isGenerated) {
@@ -65,17 +87,31 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="topic">Tema del artículo</Label>
-            <Input id="topic" required placeholder="Ej: Inteligencia Artificial" />
+            <Input
+              id="topic"
+              required
+              placeholder="Ej: Inteligencia Artificial"
+              value={tema}
+              onChange={(e) => setTema(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="keywords">Palabras clave</Label>
-            <Input id="keywords" placeholder="Ej: IA, modelos, GPT" />
+            <Input
+              id="keywords"
+              placeholder="Ej: IA, modelos, GPT"
+              value={palabrasClave}
+              onChange={(e) => setPalabrasClave(e.target.value)}
+            />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="tone">Tono</Label>
-              <Select defaultValue="formal">
-                <SelectTrigger id="tone">
+              <Select
+                value={tonoTexto}
+                onValueChange={(v) => setTonoTexto(v)}
+              >
+                <SelectTrigger>
                   <SelectValue placeholder="Tono" />
                 </SelectTrigger>
                 <SelectContent>
@@ -86,9 +122,12 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="format">Formato</Label>
-              <Select defaultValue="guide">
-                <SelectTrigger id="format">
+              <Label htmlFor="format">Formato (opcional)</Label>
+              <Select
+                value={formato}
+                onValueChange={(v) => setFormato(v)}
+              >
+                <SelectTrigger>
                   <SelectValue placeholder="Formato" />
                 </SelectTrigger>
                 <SelectContent>
@@ -100,8 +139,11 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="length">Longitud</Label>
-              <Select defaultValue="medium">
-                <SelectTrigger id="length">
+              <Select
+                value={longitud}
+                onValueChange={(v) => setLongitud(v)}
+              >
+                <SelectTrigger>
                   <SelectValue placeholder="Longitud" />
                 </SelectTrigger>
                 <SelectContent>

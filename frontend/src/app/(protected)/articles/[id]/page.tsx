@@ -1,19 +1,24 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Article, fetchArticleById } from '@/lib/api/articles'
+} from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Article, fetchArticleById } from "@/lib/api/articles"
+import { format } from "date-fns"
+import { es } from "date-fns/locale"
+
+const formatDate = (dateString: string): string =>
+  format(new Date(dateString), "dd 'de' MMMM yyyy", { locale: es })
 
 export default function ArticleDetailPage() {
   const { id } = useParams()
@@ -51,7 +56,7 @@ export default function ArticleDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <Button variant="ghost" onClick={() => router.push('/articles')}>
+      <Button variant="ghost" onClick={() => router.push("/articles")}>
         <ArrowLeft className="mr-2 h-4 w-4" />
         Volver al listado
       </Button>
@@ -61,7 +66,11 @@ export default function ArticleDetailPage() {
           <CardTitle className="text-2xl">{article.title}</CardTitle>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
             <Badge variant="outline">{article.author}</Badge>
-            <span>{article.publicationDate}</span>
+            <span>
+              {article.publicationDate
+                ? formatDate(article.publicationDate)
+                : "—"}
+            </span>
           </div>
         </CardHeader>
         <Separator />
