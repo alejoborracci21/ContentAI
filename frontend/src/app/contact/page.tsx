@@ -47,13 +47,13 @@ export default function ContactPage() {
   return (
     <div className="relative">
       {/* bg-dark */}
-      {/* <div className="absolute top-0 z-[-2] h-full w-full  rotate-180 transform  dark:bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(19,91,246)_200%)]"></div>
-      <div className="absolute -z-20 bottom-0 left-0 right-0 top-0 dark:bg-[linear-gradient(to_right,#719bf55e_0px,transparent_1px),linear-gradient(to_bottom,#719bf55e_0px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div> */}
+      <div className="absolute top-0 z-[-2] h-full w-full  rotate-180 transform  dark:bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(19,91,246)_200%)]"></div>
+      <div className="absolute -z-20 bottom-0 left-0 right-0 top-0 dark:bg-[linear-gradient(to_right,#719bf55e_0px,transparent_1px),linear-gradient(to_bottom,#719bf55e_0px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
       {/* bg-light */}
-      {/* <div className="absolute inset-0 -z-10 h-full w-full  bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem] dark:hidden">
+      <div className="absolute inset-0 -z-10 h-full w-full  bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem] dark:hidden">
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#3970ECce,transparent)] dark:hidden"></div>
-      </div> */}
+      </div>
 
       <div className="flex min-h-screen flex-col">
         {/* Header reutilizado */}

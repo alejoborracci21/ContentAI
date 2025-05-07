@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FileText, FilePlus, Sparkles, User, Feather } from "lucide-react";
+import { FileText, FilePlus, Sparkles, User } from "lucide-react";
 
 import {
   Sidebar,
@@ -20,6 +20,7 @@ import { NavUser } from "./navUser";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { getUserInBackend } from "@/lib/api/users";
+import Image from "next/image";
 
 const links = [
   { href: "/articles", label: "Artículos publicados", icon: FileText },
@@ -68,11 +69,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
         >
-          <div className="flex aspect-square size-7 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <Feather className="size-5" />
+          <div className="flex aspect-square size-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+            <Image src={'/logo.png'} alt="logo" width={64} height={64}/>
           </div>
           <div className="flex-1 grid text-left text-sm leading-tight">
-            <span className="truncate font-semibold">ContentAI</span>
+            <span className="truncate font-semibold">ContenAI</span>
           </div>
         </SidebarMenuButton>
       </SidebarHeader>
