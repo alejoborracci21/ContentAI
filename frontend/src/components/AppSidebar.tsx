@@ -25,7 +25,7 @@ import Image from "next/image";
 const links = [
   { href: "/articles", label: "Artículos publicados", icon: FileText },
   { href: "/my-articles", label: "Tus artículos", icon: FilePlus },
-  { href: "/generator", label: "Generador de IA", icon: Sparkles },
+  { href: "/generator", label: "Crear artículo", icon: Sparkles },
   { href: "/profile", label: "Tu perfil", icon: User },
 ];
 
@@ -100,7 +100,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              {/* Si userProfile es null, muestra "Cargando..." */}
               <NavUser
                 user={
                   userProfile ?? {

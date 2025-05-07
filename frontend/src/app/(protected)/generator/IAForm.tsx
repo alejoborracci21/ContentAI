@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import {
@@ -21,9 +22,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { createArticlesWithIA } from "@/lib/api/articles"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { createArticlesWithIA, createArticle } from "@/lib/api/articles"
 
 export default function IAForm({ onBack }: { onBack: () => void }) {
+  const router = useRouter()
+
   const [tema, setTema] = useState("")
   const [palabrasClave, setPalabrasClave] = useState("")
   const [tonoTexto, setTonoTexto] = useState("formal")
@@ -34,9 +45,11 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
   const [isGenerated, setIsGenerated] = useState(false)
   const [generatedContent, setGeneratedContent] = useState("")
 
-  // Para manejar edición
   const [isEditing, setIsEditing] = useState(false)
   const [editingContent, setEditingContent] = useState("")
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [newTitle, setNewTitle] = useState("")
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -59,78 +72,117 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
     }
   }
 
-  // Al hacer clic en Editar, preparamos el contenido para editar
   const startEditing = () => {
     setEditingContent(generatedContent)
     setIsEditing(true)
   }
-
-  // Guardar los cambios de edición
   const saveEdits = () => {
     setGeneratedContent(editingContent)
     setIsEditing(false)
   }
-
-  // Cancelar edición y volver al preview
   const cancelEdits = () => {
     setIsEditing(false)
   }
 
+  const openSaveDialog = () => {
+    setNewTitle("")
+    setIsDialogOpen(true)
+  }
+  const handleConfirmSave = async () => {
+    if (!newTitle.trim()) {
+      alert("El título no puede estar vacío.")
+      return
+    }
+    try {
+      await createArticle({ title: newTitle.trim(), content: generatedContent })
+      setIsDialogOpen(false)
+      router.push("/my-articles")
+    } catch (err) {
+      console.error("Error al guardar artículo:", err)
+      alert("No se pudo guardar el artículo.")
+    }
+  }
+
   if (isGenerated) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Artículo Generado</CardTitle>
-          <CardDescription>
-            {isEditing
-              ? "Edita el contenido y guarda o cancela los cambios"
-              : "Revisa el contenido generado"}
-          </CardDescription>
-        </CardHeader>
+      <>
+        <Card>
+          <CardHeader>
+            <CardTitle>Artículo Generado</CardTitle>
+            <CardDescription>
+              {isEditing
+                ? "Edita el contenido y guarda o cancela los cambios"
+                : "Revisa el contenido generado"}
+            </CardDescription>
+          </CardHeader>
 
-        <CardContent>
-          {isEditing ? (
-            // Modo edición: textarea para modificar
-            <textarea
-              className="w-full h-64 p-2 border rounded-md focus:outline-none focus:ring"
-              value={editingContent}
-              onChange={(e) => setEditingContent(e.target.value)}
-            />
-          ) : (
-            // Modo preview: renderizamos Markdown
-            <article className="prose prose-neutral dark:prose-invert max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {generatedContent}
-              </ReactMarkdown>
-            </article>
-          )}
-        </CardContent>
+          <CardContent>
+            {isEditing ? (
+              <textarea
+                className="w-full h-64 p-2 border rounded-md focus:outline-none focus:ring"
+                value={editingContent}
+                onChange={(e) => setEditingContent(e.target.value)}
+              />
+            ) : (
+              <article className="prose prose-neutral dark:prose-invert max-w-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {generatedContent}
+                </ReactMarkdown>
+              </article>
+            )}
+          </CardContent>
 
-        <CardFooter className="flex justify-between">
-          {isEditing ? (
-            // Botones Guardar/Cancelar en edición
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={cancelEdits}>
+          <CardFooter className="flex justify-between">
+            {isEditing ? (
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={cancelEdits}>
+                  Cancelar
+                </Button>
+                <Button onClick={saveEdits}>Guardar</Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setIsGenerated(false)}>
+                  Volver a configurar
+                </Button>
+                <Button variant="outline" onClick={openSaveDialog}>
+                  Guardar
+                </Button>
+                <Button onClick={startEditing}>Editar</Button>
+              </div>
+            )}
+          </CardFooter>
+        </Card>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Guardar Artículo</DialogTitle>
+              <DialogDescription>
+                Ingresa el título que deseas para este artículo.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2">
+              <Label htmlFor="article-title">Título</Label>
+              <Input
+                id="article-title"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Ej: Mi artículo sobre IA"
+              />
+            </div>
+            <DialogFooter className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={saveEdits}>Guardar</Button>
-            </div>
-          ) : (
-            // Botones principales en preview
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setIsGenerated(false)}>
-                Volver a configurar
-              </Button>
-              <Button variant="outline">Guardar en borradores</Button>
-              <Button onClick={startEditing}>Editar</Button>
-            </div>
-          )}
-        </CardFooter>
-      </Card>
+              <Button onClick={handleConfirmSave}>Confirmar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     )
   }
 
-  // Formulario de generación
   return (
     <form onSubmit={handleGenerate}>
       <Card>
