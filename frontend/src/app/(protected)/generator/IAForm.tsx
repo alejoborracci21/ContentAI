@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useState } from "react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import {
   Card,
   CardContent,
@@ -25,16 +27,16 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
   const [tema, setTema] = useState("")
   const [palabrasClave, setPalabrasClave] = useState("")
   const [tonoTexto, setTonoTexto] = useState("formal")
-  const [formato, setFormato] = useState("guide")  // si tu API lo necesitase
+  const [formato, setFormato] = useState("guide")
   const [longitud, setLongitud] = useState("medium")
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
   const [generatedContent, setGeneratedContent] = useState("")
 
   const handleGenerate = async (e: React.FormEvent) => {
-    
     e.preventDefault()
     setIsGenerating(true)
+
     try {
       const result = await createArticlesWithIA({
         tema,
@@ -60,9 +62,11 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
           <CardDescription>Revisa el contenido generado</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="p-4 bg-gray-50 rounded-md whitespace-pre-line">
-            {generatedContent}
-          </div>
+          <article className="prose prose-neutral dark:prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {generatedContent}
+            </ReactMarkdown>
+          </article>
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline" onClick={() => setIsGenerated(false)}>
@@ -109,7 +113,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
               <Label htmlFor="tone">Tono</Label>
               <Select
                 value={tonoTexto}
-                onValueChange={(v) => setTonoTexto(v)}
+                onValueChange={setTonoTexto}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Tono" />
@@ -125,7 +129,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
               <Label htmlFor="format">Formato (opcional)</Label>
               <Select
                 value={formato}
-                onValueChange={(v) => setFormato(v)}
+                onValueChange={setFormato}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Formato" />
@@ -141,7 +145,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
               <Label htmlFor="length">Longitud</Label>
               <Select
                 value={longitud}
-                onValueChange={(v) => setLongitud(v)}
+                onValueChange={setLongitud}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Longitud" />
