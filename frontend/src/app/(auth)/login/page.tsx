@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import {
@@ -23,11 +24,13 @@ import {
 } from "@/components/ui/select"
 import { createArticlesWithIA } from "@/lib/api/articles"
 
-export default function IAForm({ onBack }: { onBack: () => void }) {
+export default function Page() {
+  const router = useRouter()
+
   const [tema, setTema] = useState("")
   const [palabrasClave, setPalabrasClave] = useState("")
   const [tonoTexto, setTonoTexto] = useState("formal")
-  const [formato, setFormato] = useState("guide")    // opcional según tu API
+  const [formato, setFormato] = useState("guide")
   const [longitud, setLongitud] = useState("medium")
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
@@ -36,7 +39,6 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsGenerating(true)
-
     try {
       const result = await createArticlesWithIA({
         tema,
@@ -44,7 +46,6 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
         tonoTexto,
         Longitud: longitud,
       })
-      // asumimos { content: string } o similar
       setGeneratedContent(result.content ?? JSON.stringify(result))
       setIsGenerated(true)
     } catch (err) {
@@ -74,7 +75,9 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
             Volver a configurar
           </Button>
           <div className="space-x-2">
-            <Button variant="outline">Guardar en borradores</Button>
+            <Button variant="outline" onClick={() => router.back()}>
+              Volver
+            </Button>
             <Button>Editar</Button>
           </div>
         </CardFooter>
@@ -114,11 +117,8 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="tone">Tono</Label>
-              <Select
-                value={tonoTexto}
-                onValueChange={(v) => setTonoTexto(v)}
-              >
-                <SelectTrigger>
+              <Select value={tonoTexto} onValueChange={setTonoTexto}>
+                <SelectTrigger id="tone">
                   <SelectValue placeholder="Tono" />
                 </SelectTrigger>
                 <SelectContent>
@@ -130,12 +130,9 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="format">Formato (opcional)</Label>
-              <Select
-                value={formato}
-                onValueChange={(v) => setFormato(v)}
-              >
-                <SelectTrigger>
+              <Label htmlFor="format">Formato</Label>
+              <Select value={formato} onValueChange={setFormato}>
+                <SelectTrigger id="format">
                   <SelectValue placeholder="Formato" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,11 +145,8 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
 
             <div className="space-y-2">
               <Label htmlFor="length">Longitud</Label>
-              <Select
-                value={longitud}
-                onValueChange={(v) => setLongitud(v)}
-              >
-                <SelectTrigger>
+              <Select value={longitud} onValueChange={setLongitud}>
+                <SelectTrigger id="length">
                   <SelectValue placeholder="Longitud" />
                 </SelectTrigger>
                 <SelectContent>
@@ -165,7 +159,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={onBack}>
+          <Button variant="outline" onClick={() => router.back()}>
             Volver
           </Button>
           <Button type="submit" disabled={isGenerating}>

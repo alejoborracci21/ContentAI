@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/dialog"
 import { createArticlesWithIA, createArticle } from "@/lib/api/articles"
 
-export default function IAForm({ onBack }: { onBack: () => void }) {
+export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
   const router = useRouter()
 
   const [tema, setTema] = useState("")
@@ -55,12 +55,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
     e.preventDefault()
     setIsGenerating(true)
     try {
-      const result = await createArticlesWithIA({
-        tema,
-        palabrasClave,
-        tonoTexto,
-        Longitud: longitud,
-      })
+      const result = await createArticlesWithIA({ tema, palabrasClave, tonoTexto, Longitud: longitud })
       const content = result.content ?? JSON.stringify(result)
       setGeneratedContent(content)
       setIsGenerated(true)
@@ -76,10 +71,12 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
     setEditingContent(generatedContent)
     setIsEditing(true)
   }
+
   const saveEdits = () => {
     setGeneratedContent(editingContent)
     setIsEditing(false)
   }
+
   const cancelEdits = () => {
     setIsEditing(false)
   }
@@ -88,6 +85,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
     setNewTitle("")
     setIsDialogOpen(true)
   }
+
   const handleConfirmSave = async () => {
     if (!newTitle.trim()) {
       alert("El título no puede estar vacío.")
@@ -125,9 +123,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
               />
             ) : (
               <article className="prose prose-neutral dark:prose-invert max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {generatedContent}
-                </ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedContent}</ReactMarkdown>
               </article>
             )}
           </CardContent>
@@ -135,9 +131,7 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
           <CardFooter className="flex justify-between">
             {isEditing ? (
               <div className="flex gap-2">
-                <Button variant="outline" onClick={cancelEdits}>
-                  Cancelar
-                </Button>
+                <Button variant="outline" onClick={cancelEdits}>Cancelar</Button>
                 <Button onClick={saveEdits}>Guardar</Button>
               </div>
             ) : (
@@ -252,8 +246,8 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={onBack}>
+        <CardFooter className="flex justify-end space-x-2">
+          <Button variant="outline" onClick={onSwitchToAI}>
             Volver
           </Button>
           <Button type="submit" disabled={isGenerating}>
