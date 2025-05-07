@@ -6,11 +6,27 @@ import { fetchArticleById, Article } from "@/lib/api/articles"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { publishArticle } from "@/lib/api/articles"
 
 export default function ArticleDetailPage() {
   const { id } = useParams()
   const router = useRouter()
   const [article, setArticle] = useState<Article | null>(null)
+
+
+  const handlePublish = () => {
+    console.log("Publicando artículo...")
+    publishArticle(id as string)
+      .then(() => {
+        console.log("Artículo publicado")
+        router.push("/my-articles")
+      })
+      .catch(() => {
+        console.error("Error al publicar artículo:")
+      })
+  }
+
+
 
   useEffect(() => {
     async function fetchArticle() {
@@ -39,7 +55,7 @@ export default function ArticleDetailPage() {
           <Button variant="outline" onClick={() => router.push(`/my-articles/${article.id}/edit`)}>
             Editar
           </Button>
-          <Button disabled>Publicar</Button>
+          <Button onClick={handlePublish}>Publicar</Button>
         </div>
       </CardContent>
     </Card>
