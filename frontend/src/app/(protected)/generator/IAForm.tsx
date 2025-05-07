@@ -29,14 +29,18 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
   const [tonoTexto, setTonoTexto] = useState("formal")
   const [formato, setFormato] = useState("guide")
   const [longitud, setLongitud] = useState("medium")
+
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
   const [generatedContent, setGeneratedContent] = useState("")
 
+  // Para manejar edición
+  const [isEditing, setIsEditing] = useState(false)
+  const [editingContent, setEditingContent] = useState("")
+
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsGenerating(true)
-
     try {
       const result = await createArticlesWithIA({
         tema,
@@ -44,7 +48,8 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
         tonoTexto,
         Longitud: longitud,
       })
-      setGeneratedContent(result.content ?? JSON.stringify(result))
+      const content = result.content ?? JSON.stringify(result)
+      setGeneratedContent(content)
       setIsGenerated(true)
     } catch (err) {
       console.error("Error generando artículo:", err)
@@ -54,33 +59,78 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
     }
   }
 
+  // Al hacer clic en Editar, preparamos el contenido para editar
+  const startEditing = () => {
+    setEditingContent(generatedContent)
+    setIsEditing(true)
+  }
+
+  // Guardar los cambios de edición
+  const saveEdits = () => {
+    setGeneratedContent(editingContent)
+    setIsEditing(false)
+  }
+
+  // Cancelar edición y volver al preview
+  const cancelEdits = () => {
+    setIsEditing(false)
+  }
+
   if (isGenerated) {
     return (
       <Card>
         <CardHeader>
           <CardTitle>Artículo Generado</CardTitle>
-          <CardDescription>Revisa el contenido generado</CardDescription>
+          <CardDescription>
+            {isEditing
+              ? "Edita el contenido y guarda o cancela los cambios"
+              : "Revisa el contenido generado"}
+          </CardDescription>
         </CardHeader>
+
         <CardContent>
-          <article className="prose prose-neutral dark:prose-invert max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {generatedContent}
-            </ReactMarkdown>
-          </article>
+          {isEditing ? (
+            // Modo edición: textarea para modificar
+            <textarea
+              className="w-full h-64 p-2 border rounded-md focus:outline-none focus:ring"
+              value={editingContent}
+              onChange={(e) => setEditingContent(e.target.value)}
+            />
+          ) : (
+            // Modo preview: renderizamos Markdown
+            <article className="prose prose-neutral dark:prose-invert max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {generatedContent}
+              </ReactMarkdown>
+            </article>
+          )}
         </CardContent>
+
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={() => setIsGenerated(false)}>
-            Volver a configurar
-          </Button>
-          <div className="space-x-2">
-            <Button variant="outline">Guardar en borradores</Button>
-            <Button>Editar</Button>
-          </div>
+          {isEditing ? (
+            // Botones Guardar/Cancelar en edición
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={cancelEdits}>
+                Cancelar
+              </Button>
+              <Button onClick={saveEdits}>Guardar</Button>
+            </div>
+          ) : (
+            // Botones principales en preview
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setIsGenerated(false)}>
+                Volver a configurar
+              </Button>
+              <Button variant="outline">Guardar en borradores</Button>
+              <Button onClick={startEditing}>Editar</Button>
+            </div>
+          )}
         </CardFooter>
       </Card>
     )
   }
 
+  // Formulario de generación
   return (
     <form onSubmit={handleGenerate}>
       <Card>
@@ -111,11 +161,8 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="tone">Tono</Label>
-              <Select
-                value={tonoTexto}
-                onValueChange={setTonoTexto}
-              >
-                <SelectTrigger>
+              <Select value={tonoTexto} onValueChange={setTonoTexto}>
+                <SelectTrigger id="tone">
                   <SelectValue placeholder="Tono" />
                 </SelectTrigger>
                 <SelectContent>
@@ -127,11 +174,8 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="format">Formato (opcional)</Label>
-              <Select
-                value={formato}
-                onValueChange={setFormato}
-              >
-                <SelectTrigger>
+              <Select value={formato} onValueChange={setFormato}>
+                <SelectTrigger id="format">
                   <SelectValue placeholder="Formato" />
                 </SelectTrigger>
                 <SelectContent>
@@ -143,11 +187,8 @@ export default function IAForm({ onBack }: { onBack: () => void }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="length">Longitud</Label>
-              <Select
-                value={longitud}
-                onValueChange={setLongitud}
-              >
-                <SelectTrigger>
+              <Select value={longitud} onValueChange={setLongitud}>
+                <SelectTrigger id="length">
                   <SelectValue placeholder="Longitud" />
                 </SelectTrigger>
                 <SelectContent>
