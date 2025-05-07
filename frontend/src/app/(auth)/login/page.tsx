@@ -1,172 +1,137 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { useRouter } from "next/navigation"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword, signOut as firebaseSignOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { createArticlesWithIA } from "@/lib/api/articles"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { getUserInBackend } from "@/lib/api/users";
 
-export default function Page() {
-  const router = useRouter()
+export default function LoginPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [tema, setTema] = useState("")
-  const [palabrasClave, setPalabrasClave] = useState("")
-  const [tonoTexto, setTonoTexto] = useState("formal")
-  const [formato, setFormato] = useState("guide")
-  const [longitud, setLongitud] = useState("medium")
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [isGenerated, setIsGenerated] = useState(false)
-  const [generatedContent, setGeneratedContent] = useState("")
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-  const handleGenerate = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsGenerating(true)
     try {
-      const result = await createArticlesWithIA({
-        tema,
-        palabrasClave,
-        tonoTexto,
-        Longitud: longitud,
-      })
-      setGeneratedContent(result.content ?? JSON.stringify(result))
-      setIsGenerated(true)
-    } catch (err) {
-      console.error("Error generando artículo:", err)
-      alert("Ocurrió un error al generar el artículo.")
-    } finally {
-      setIsGenerating(false)
-    }
-  }
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
 
-  if (isGenerated) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Artículo Generado</CardTitle>
-          <CardDescription>Revisa el contenido generado</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="prose prose-neutral max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {generatedContent}
-            </ReactMarkdown>
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={() => setIsGenerated(false)}>
-            Volver a configurar
-          </Button>
-          <div className="space-x-2">
-            <Button variant="outline" onClick={() => router.back()}>
-              Volver
-            </Button>
-            <Button>Editar</Button>
-          </div>
-        </CardFooter>
-      </Card>
-    )
-  }
+      const token = await user.getIdToken();
+      console.log("Token:", token);
+      const res = await getUserInBackend(token);
+
+      if (res.status === 401 || res.error === "Unauthorized") {
+        await firebaseSignOut(auth);
+        toast({
+          title: "Sesión inválida",
+          description: "Por favor inicia sesión nuevamente.",
+          variant: "destructive",
+        });
+        router.replace("/login");
+        return;
+      }
+
+      // 5. Inicio exitoso
+      toast({
+        title: "Inicio de sesión exitoso",
+        description: "Redirigiendo a artículos...",
+        variant: "blue",
+      });
+      router.push("/articles");
+    } catch (err) {
+      console.error("Error en login o validación:", err);
+      toast({
+        title: "Error al iniciar sesión",
+        description: err instanceof Error ? err.message : String(err),
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <form onSubmit={handleGenerate}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Generar con IA</CardTitle>
-          <CardDescription>Configura los parámetros</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="topic">Tema del artículo</Label>
-            <Input
-              id="topic"
-              required
-              placeholder="Ej: Inteligencia Artificial"
-              value={tema}
-              onChange={(e) => setTema(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="keywords">Palabras clave</Label>
-            <Input
-              id="keywords"
-              placeholder="Ej: IA, modelos, GPT"
-              value={palabrasClave}
-              onChange={(e) => setPalabrasClave(e.target.value)}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="tone">Tono</Label>
-              <Select value={tonoTexto} onValueChange={setTonoTexto}>
-                <SelectTrigger id="tone">
-                  <SelectValue placeholder="Tono" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="formal">Formal</SelectItem>
-                  <SelectItem value="friendly">Amigable</SelectItem>
-                  <SelectItem value="technical">Técnico</SelectItem>
-                </SelectContent>
-              </Select>
+    <main className="flex min-h-screen items-center justify-center px-4">
+      <div className="absolute top-0 -z-10 h-full w-full">
+        <div className="absolute left-1/2 h-[500px] w-[500px] -translate-x-[50%] translate-y-[50%] rounded-full bg-[rgba(90,128,252,0.47)] opacity-60 blur-[180px]"></div>
+      </div>
+      <Toaster />
+      <div className="flex flex-col gap-2 w-full max-w-md">
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">Bienvenido de nuevo</CardTitle>
+            <CardDescription>Inicia sesión con tu cuenta</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="grid gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="correo@ejemplo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Contraseña</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Iniciando..." : "Iniciar sesión"}
+              </Button>
+            </form>
+            <div className="text-center text-sm mt-4">
+              ¿No tenés cuenta?{' '}
+              <button
+                onClick={() => router.push("/register")}
+                className="underline text-blue-600 hover:text-blue-800"
+              >
+                Registrate
+              </button>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="format">Formato</Label>
-              <Select value={formato} onValueChange={setFormato}>
-                <SelectTrigger id="format">
-                  <SelectValue placeholder="Formato" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="guide">Guía</SelectItem>
-                  <SelectItem value="list">Lista</SelectItem>
-                  <SelectItem value="comparison">Comparativa</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="mt-2 text-center">
+              <Button
+                variant="outline"
+                className="w-full mt-2"
+                onClick={() => router.push("/")}
+              >
+                Volver al inicio
+              </Button>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="length">Longitud</Label>
-              <Select value={longitud} onValueChange={setLongitud}>
-                <SelectTrigger id="length">
-                  <SelectValue placeholder="Longitud" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="short">Corta</SelectItem>
-                  <SelectItem value="medium">Media</SelectItem>
-                  <SelectItem value="long">Larga</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={() => router.back()}>
-            Volver
-          </Button>
-          <Button type="submit" disabled={isGenerating}>
-            {isGenerating ? "Generando..." : "Generar"}
-          </Button>
-        </CardFooter>
-      </Card>
-    </form>
-  )
+          </CardContent>
+        </Card>
+        <div className="text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
+          By clicking continue, you agree to our{' '}
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </div>
+      </div>
+    </main>
+  );
 }
