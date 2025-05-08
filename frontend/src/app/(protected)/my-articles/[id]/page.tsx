@@ -18,6 +18,7 @@ import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft } from "lucide-react";
 import rehypeRaw from "rehype-raw";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Función para formatear fecha ISO a "dd 'de' MMMM yyyy"
 const formatDate = (dateString: string): string =>
@@ -43,7 +44,13 @@ export default function ArticleDetailPage() {
   }, [id]);
 
   if (!article) {
-    return <div className="p-6">Cargando artículo...</div>;
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-screen w-full" />
+      </div>
+    );
   }
 
   return (

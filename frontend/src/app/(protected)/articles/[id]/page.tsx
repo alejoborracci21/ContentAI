@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
-import rehypeRaw from 'rehype-raw'
+import rehypeRaw from "rehype-raw";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -26,9 +26,15 @@ export default function ArticleDetailPage() {
 
   useEffect(() => {
     const loadArticle = async () => {
-      const data = await fetchArticleById(id as string);
-      setArticle(data);
-      setLoading(false);
+      try {
+        const data = await fetchArticleById(id as string);
+        setArticle(data);
+      } catch (error) {
+        console.error("Error cargando artículo:", error);
+        setArticle(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     if (id) loadArticle();
@@ -53,7 +59,7 @@ export default function ArticleDetailPage() {
   }
 
   return (
-    <div className="space-y-6  pb-24">
+    <div className="space-y-6 pb-24">
       <Button variant="ghost" onClick={() => router.push("/articles")}>
         <ArrowLeft className="mr-2 h-4 w-4" />
         Volver al listado
@@ -74,7 +80,10 @@ export default function ArticleDetailPage() {
         <Separator />
         <CardContent>
           <article className="prose prose-neutral dark:prose-invert max-w-none">
-            <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkGfm]}
+            >
               {article.content}
             </ReactMarkdown>
           </article>
