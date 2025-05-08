@@ -1,15 +1,10 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -17,62 +12,83 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Eye, Trash2, Search } from "lucide-react"
-import { myArticles, deleteArticle, Article } from "@/lib/api/articles"
-import { format } from "date-fns"
-import { es } from "date-fns/locale"
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+import { Eye, Trash2, Search } from "lucide-react";
+import { myArticles, deleteArticle, Article } from "@/lib/api/articles";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 // Formatea "YYYY-MM-DD..." a "dd 'de' MMMM yyyy" (e.g., "05 de mayo 2025")
 const formatDate = (dateString: string): string =>
-  format(new Date(dateString), "dd 'de' MMMM yyyy", { locale: es })
+  format(new Date(dateString), "dd 'de' MMMM yyyy", { locale: es });
 
 export default function HistoryPage() {
-  const [articles, setArticles] = useState<Article[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [timeFilter, setTimeFilter] = useState("all")
-  const router = useRouter()
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [timeFilter, setTimeFilter] = useState("all");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(
+    null
+  );
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await myArticles()
-        setArticles(res)
+        const res = await myArticles();
+        setArticles(res);
       } catch (error) {
-        console.error("Error al cargar artículos:", error)
+        console.error("Error al cargar artículos:", error);
       }
-    }
-    fetchArticles()
-  }, [])
+    };
+    fetchArticles();
+  }, []);
 
   const filteredArticles = articles.filter((article) => {
     const matchesSearch = article.title
       .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-    if (timeFilter === "all") return matchesSearch
+      .includes(searchTerm.toLowerCase());
+    if (timeFilter === "all") return matchesSearch;
 
-    const daysAgo = timeFilter === "7days" ? 7 : 30
-    const articleDate = new Date(article.creationDate || "")
-    const now = new Date()
+    const daysAgo = timeFilter === "7days" ? 7 : 30;
+    const articleDate = new Date(article.creationDate || "");
+    const now = new Date();
     const diffInDays =
-      (now.getTime() - articleDate.getTime()) / (1000 * 60 * 60 * 24)
+      (now.getTime() - articleDate.getTime()) / (1000 * 60 * 60 * 24);
 
-    return matchesSearch && diffInDays <= daysAgo
-  })
+    return matchesSearch && diffInDays <= daysAgo;
+  });
 
-  const handleDelete = async (id: string) => {
-    if (confirm("¿Estás seguro de eliminar este artículo?")) {
-      await deleteArticle(id)
-      setArticles((prev) => prev.filter((a) => a.id !== id))
+  const confirmDelete = async () => {
+    if (!selectedArticleId) return;
+
+    try {
+      await deleteArticle(selectedArticleId);
+      setArticles((prev) => prev.filter((a) => a.id !== selectedArticleId));
+    } catch (error) {
+      console.error("Error eliminando artículo:", error);
+    } finally {
+      setIsDialogOpen(false);
+      setSelectedArticleId(null);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -144,7 +160,10 @@ export default function HistoryPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleDelete(article.id)}
+                            onClick={() => {
+                              setSelectedArticleId(article.id);
+                              setIsDialogOpen(true);
+                            }}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -167,6 +186,25 @@ export default function HistoryPage() {
           </div>
         </CardContent>
       </Card>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>¿Eliminar artículo?</DialogTitle>
+            <DialogDescription>
+              Esta acción no se puede deshacer. ¿Estás seguro de que quieres
+              eliminar este artículo?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  )
+  );
 }

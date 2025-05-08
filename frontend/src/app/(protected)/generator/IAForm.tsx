@@ -33,6 +33,7 @@ import {
 import { createArticlesWithIA, createArticle } from "@/lib/api/articles";
 import MDXEditorWrapper from "@/components/MDXEditorWrapper";
 import rehypeRaw from "rehype-raw";
+import { useToast } from "@/hooks/use-toast";
 
 export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
   const router = useRouter();
@@ -53,6 +54,8 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
 
+  const { toast } = useToast();
+  
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsGenerating(true);
@@ -63,12 +66,23 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
         tonoTexto,
         Longitud: longitud,
       });
+      console.log({ tema, palabrasClave, tonoTexto, longitud });
+
       const content = result.content ?? JSON.stringify(result);
       setGeneratedContent(content);
       setIsGenerated(true);
+      toast({
+        title: "Artículo creado exitosamente",
+        description: "Ahora puedes publicar o editar el artículo.",
+        variant: "blue",
+      });
     } catch (err) {
       console.error("Error generando artículo:", err);
-      alert("Ocurrió un error al generar el artículo.");
+      toast({
+        title: "Error al crear artículo",
+        description: "Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -95,7 +109,11 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
 
   const handleConfirmSave = async () => {
     if (!newTitle.trim()) {
-      alert("El título no puede estar vacío.");
+      toast({
+        title: "El título no puede estar vacío.",
+        description: "Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
       return;
     }
     try {
@@ -107,7 +125,11 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
       router.push("/my-articles");
     } catch (err) {
       console.error("Error al guardar artículo:", err);
-      alert("No se pudo guardar el artículo.");
+      toast({
+        title: "Error al crear artículo",
+        description: "Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -209,6 +231,7 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
               placeholder="Ej: Inteligencia Artificial"
               value={tema}
               onChange={(e) => setTema(e.target.value)}
+              minLength={10}
             />
           </div>
           <div className="space-y-2">

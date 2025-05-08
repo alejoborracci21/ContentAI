@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -13,7 +13,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createArticle } from "@/lib/api/articles";
-import MDXEditorWrapper from "@/components/MDXEditorWrapper";
+import MDXEditorWrapper, {
+  MDXEditorWrapperRef,
+} from "@/components/MDXEditorWrapper";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ManualForm({
   onSwitchToAI,
@@ -23,26 +26,34 @@ export default function ManualForm({
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  const editorRef = useRef<MDXEditorWrapperRef>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const articleData = {
-        title: title,
-        content: content,
-      };
-
+      const articleData = { title, content };
       const createdArticle = await createArticle(articleData);
       if (!createdArticle) throw new Error("Error al crear el artículo");
 
       setTitle("");
       setContent("");
-      alert("Artículo creado exitosamente");
+      editorRef.current?.resetContent();
+
+      toast({
+        title: "Artículo creado exitosamente",
+        description: "Ahora puedes publicar o editar el artículo.",
+        variant: "blue",
+      });
     } catch (err) {
       console.error("Error al crear artículo:", err);
-      alert("Ocurrió un error al guardar el artículo");
+      toast({
+        title: "Error al crear artículo",
+        description: "Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -64,11 +75,13 @@ export default function ManualForm({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
+              minLength={10}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="content">Contenido</Label>
             <MDXEditorWrapper
+              ref={editorRef}
               initialContent={content}
               onChange={(val) => setContent(val)}
             />
