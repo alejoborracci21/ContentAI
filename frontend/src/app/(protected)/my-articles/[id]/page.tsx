@@ -17,6 +17,7 @@ import { es } from "date-fns/locale";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft } from "lucide-react";
+import rehypeRaw from "rehype-raw";
 
 // Función para formatear fecha ISO a "dd 'de' MMMM yyyy"
 const formatDate = (dateString: string): string =>
@@ -66,9 +67,12 @@ export default function ArticleDetailPage() {
             </div>
           </CardDescription>
         </CardHeader>
-        <CardContent >
-          <article className="prose prose-neutral dark:prose-invert max-w-none whitespace-pre-line">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        <CardContent>
+          <article className="prose prose-neutral dark:prose-invert max-w-none ">
+            <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkGfm]}
+            >
               {article.content}
             </ReactMarkdown>
           </article>

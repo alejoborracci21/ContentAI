@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
-
+import rehypeRaw from 'rehype-raw'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -73,8 +73,8 @@ export default function ArticleDetailPage() {
         </CardHeader>
         <Separator />
         <CardContent>
-          <article className="prose prose-neutral dark:prose-invert max-w-none whitespace-pre-line">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <article className="prose prose-neutral dark:prose-invert max-w-none">
+            <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
               {article.content}
             </ReactMarkdown>
           </article>

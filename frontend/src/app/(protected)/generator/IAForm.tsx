@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { useRouter } from "next/navigation"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Card,
   CardContent,
@@ -11,17 +11,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -29,77 +29,87 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { createArticlesWithIA, createArticle } from "@/lib/api/articles"
+} from "@/components/ui/dialog";
+import { createArticlesWithIA, createArticle } from "@/lib/api/articles";
+import MDXEditorWrapper from "@/components/MDXEditorWrapper";
+import rehypeRaw from "rehype-raw";
 
 export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [tema, setTema] = useState("")
-  const [palabrasClave, setPalabrasClave] = useState("")
-  const [tonoTexto, setTonoTexto] = useState("formal")
-  const [formato, setFormato] = useState("guide")
-  const [longitud, setLongitud] = useState("medium")
+  const [tema, setTema] = useState("");
+  const [palabrasClave, setPalabrasClave] = useState("");
+  const [tonoTexto, setTonoTexto] = useState("formal");
+  const [formato, setFormato] = useState("guide");
+  const [longitud, setLongitud] = useState("medium");
 
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [isGenerated, setIsGenerated] = useState(false)
-  const [generatedContent, setGeneratedContent] = useState("")
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerated, setIsGenerated] = useState(false);
+  const [generatedContent, setGeneratedContent] = useState("");
 
-  const [isEditing, setIsEditing] = useState(false)
-  const [editingContent, setEditingContent] = useState("")
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingContent, setEditingContent] = useState("");
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [newTitle, setNewTitle] = useState("")
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
 
   const handleGenerate = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsGenerating(true)
+    e.preventDefault();
+    setIsGenerating(true);
     try {
-      const result = await createArticlesWithIA({ tema, palabrasClave, tonoTexto, Longitud: longitud })
-      const content = result.content ?? JSON.stringify(result)
-      setGeneratedContent(content)
-      setIsGenerated(true)
+      const result = await createArticlesWithIA({
+        tema,
+        palabrasClave,
+        tonoTexto,
+        Longitud: longitud,
+      });
+      const content = result.content ?? JSON.stringify(result);
+      setGeneratedContent(content);
+      setIsGenerated(true);
     } catch (err) {
-      console.error("Error generando artículo:", err)
-      alert("Ocurrió un error al generar el artículo.")
+      console.error("Error generando artículo:", err);
+      alert("Ocurrió un error al generar el artículo.");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   const startEditing = () => {
-    setEditingContent(generatedContent)
-    setIsEditing(true)
-  }
+    setEditingContent(generatedContent);
+    setIsEditing(true);
+  };
 
   const saveEdits = () => {
-    setGeneratedContent(editingContent)
-    setIsEditing(false)
-  }
+    setGeneratedContent(editingContent);
+    setIsEditing(false);
+  };
 
   const cancelEdits = () => {
-    setIsEditing(false)
-  }
+    setIsEditing(false);
+  };
 
   const openSaveDialog = () => {
-    setNewTitle("")
-    setIsDialogOpen(true)
-  }
+    setNewTitle("");
+    setIsDialogOpen(true);
+  };
 
   const handleConfirmSave = async () => {
     if (!newTitle.trim()) {
-      alert("El título no puede estar vacío.")
-      return
+      alert("El título no puede estar vacío.");
+      return;
     }
     try {
-      await createArticle({ title: newTitle.trim(), content: generatedContent })
-      setIsDialogOpen(false)
-      router.push("/my-articles")
+      await createArticle({
+        title: newTitle.trim(),
+        content: generatedContent,
+      });
+      setIsDialogOpen(false);
+      router.push("/my-articles");
     } catch (err) {
-      console.error("Error al guardar artículo:", err)
-      alert("No se pudo guardar el artículo.")
+      console.error("Error al guardar artículo:", err);
+      alert("No se pudo guardar el artículo.");
     }
-  }
+  };
 
   if (isGenerated) {
     return (
@@ -116,14 +126,18 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
 
           <CardContent>
             {isEditing ? (
-              <textarea
-                className="w-full h-64 p-2 border rounded-md focus:outline-none focus:ring"
-                value={editingContent}
-                onChange={(e) => setEditingContent(e.target.value)}
+              <MDXEditorWrapper
+                initialContent={editingContent}
+                onChange={(val) => setEditingContent(val)}
               />
             ) : (
               <article className="prose prose-neutral dark:prose-invert max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedContent}</ReactMarkdown>
+                <ReactMarkdown
+                  rehypePlugins={[rehypeRaw]}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {generatedContent}
+                </ReactMarkdown>
               </article>
             )}
           </CardContent>
@@ -131,7 +145,9 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
           <CardFooter className="flex justify-between">
             {isEditing ? (
               <div className="flex gap-2">
-                <Button variant="outline" onClick={cancelEdits}>Cancelar</Button>
+                <Button variant="outline" onClick={cancelEdits}>
+                  Cancelar
+                </Button>
                 <Button onClick={saveEdits}>Guardar</Button>
               </div>
             ) : (
@@ -174,7 +190,7 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
           </DialogContent>
         </Dialog>
       </>
-    )
+    );
   }
 
   return (
@@ -256,5 +272,5 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
         </CardFooter>
       </Card>
     </form>
-  )
+  );
 }
