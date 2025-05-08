@@ -231,7 +231,6 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
               placeholder="Ej: Inteligencia Artificial"
               value={tema}
               onChange={(e) => setTema(e.target.value)}
-              minLength={10}
             />
           </div>
           <div className="space-y-2">
