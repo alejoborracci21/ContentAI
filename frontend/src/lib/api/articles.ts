@@ -13,7 +13,6 @@ const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function fetchArticles(): Promise<Article[]> {
   const token = await getFirebaseToken();
-
   if (!token) return [];
 
   try {

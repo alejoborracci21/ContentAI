@@ -262,9 +262,9 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end space-x-2">
-          <Button variant="outline" onClick={onSwitchToAI}>
-            Volver
+        <CardFooter className="flex justify-between">
+          <Button variant="outline" type="button" onClick={onSwitchToAI}>
+            Escribir un artículo
           </Button>
           <Button type="submit" disabled={isGenerating}>
             {isGenerating ? "Generando..." : "Generar"}
