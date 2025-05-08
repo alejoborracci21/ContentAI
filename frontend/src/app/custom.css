@@ -1,0 +1,101 @@
+@import url('@radix-ui/colors/blue-dark.css'); /* Cambiado */
+@import url('@radix-ui/colors/mauve-dark.css');
+
+
+.light-editor {
+  --accentBase: 210 100% 97%;
+  --accentBgSubtle: 210 100% 95%;
+  --accentBg: 210 100% 92%;
+  --accentBgHover: 210 100% 88%;
+  --accentBgActive: 210 100% 82%;
+  --accentLine: 210 100% 75%;
+  --accentBorder: 210 100% 65%;
+  --accentBorderHover: 210 100% 55%;
+  --accentSolid: 210 100% 50%;
+  --accentSolidHover: 210 100% 45%;
+  --accentText: 210 100% 40%;
+  --accentTextContrast: 0 0% 100%;
+
+  --baseBase: 240 20% 99%;
+  --baseBgSubtle: 240 20% 97%;
+  --baseBg: 240 15% 95%;
+  --baseBgHover: 240 15% 92%;
+  --baseBgActive: 240 10% 88%;
+  --baseLine: 240 10% 80%;
+  --baseBorder: 240 10% 70%;
+  --baseBorderHover: 240 10% 60%;
+  --baseSolid: 240 10% 50%;
+  --baseSolidHover: 240 10% 45%;
+  --baseText: 240 10% 20%;
+  --baseTextContrast: 0 0% 100%;
+
+  --admonitionTipBg: 190 70% 94%;
+  --admonitionTipBorder: 190 70% 50%;
+
+  --admonitionInfoBg: 120 60% 94%;
+  --admonitionInfoBorder: 120 60% 40%;
+
+  --admonitionCautionBg: 45 90% 94%;
+  --admonitionCautionBorder: 45 90% 50%;
+
+  --admonitionDangerBg: 0 70% 94%;
+  --admonitionDangerBorder: 0 70% 50%;
+
+  --admonitionNoteBg: 240 15% 92%;
+  --admonitionNoteBorder: 240 15% 60%;
+
+  --basePageBg: 0 0% 100%;
+  background: hsl(var(--basePageBg));
+  color: hsl(var(--baseText));
+}
+
+
+
+.dark-editor {
+  
+  --accentBase: 210 100% 10%;
+  --accentBgSubtle: 210 100% 12%;
+  --accentBg: 210 100% 15%;
+  --accentBgHover: 210 100% 20%;
+  --accentBgActive: 210 100% 25%;
+  --accentLine: 210 100% 35%;
+  --accentBorder: 210 100% 45%;
+  --accentBorderHover: 210 100% 55%;
+  --accentSolid: 210 100% 60%;
+  --accentSolidHover: 210 100% 65%;
+  --accentText: 210 100% 85%;
+  --accentTextContrast: 210 100% 98%;
+
+  --baseBase: 240 10% 10%;
+  --baseBgSubtle: 240 10% 12%;
+  --baseBg: 240 10% 15%;
+  --baseBgHover: 240 10% 20%;
+  --baseBgActive: 240 10% 25%;
+  --baseLine: 240 10% 35%;
+  --baseBorder: 240 10% 45%;
+  --baseBorderHover: 240 10% 55%;
+  --baseSolid: 240 10% 60%;
+  --baseSolidHover: 240 10% 65%;
+  --baseText: 240 10% 90%;
+  --baseTextContrast: 240 10% 10%;
+
+  --admonitionTipBg: 190 70% 10%;
+  --admonitionTipBorder: 190 70% 50%;
+
+  --admonitionInfoBg: 120 60% 10%;
+  --admonitionInfoBorder: 120 60% 40%;
+
+  --admonitionCautionBg: 45 90% 10%;
+  --admonitionCautionBorder: 45 90% 50%;
+
+  --admonitionDangerBg: 0 70% 10%;
+  --admonitionDangerBorder: 0 70% 50%;
+
+  --admonitionNoteBg: 240 10% 20%;
+  --admonitionNoteBorder: 240 10% 50%;
+
+  --basePageBg: 222.2 84% 4.9%;
+  background: hsl(var(--basePageBg));
+  color: hsl(var(--baseText));
+}
+
