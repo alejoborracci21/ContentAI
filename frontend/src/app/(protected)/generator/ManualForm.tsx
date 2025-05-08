@@ -52,7 +52,7 @@ export default function ManualForm({
     <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader>
-          <CardTitle>Crear artículo manualmente</CardTitle>
+          <CardTitle>Escribe un artículo</CardTitle>
           <CardDescription>Redacta tu artículo desde cero</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -76,7 +76,7 @@ export default function ManualForm({
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline" type="button" onClick={onSwitchToAI}>
-            Usar IA para generar contenido
+            Generar con IA
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Guardando..." : "Guardar artículo"}
