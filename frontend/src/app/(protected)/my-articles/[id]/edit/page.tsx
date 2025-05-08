@@ -1,34 +1,40 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { fetchArticleById, updateArticle } from "@/lib/api/articles"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { fetchArticleById, updateArticle } from "@/lib/api/articles";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import MDXEditorWrapper from "@/components/MDXEditorWrapper";
 
 export default function EditArticlePage() {
-  const { id } = useParams()
-  const router = useRouter()
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
+  const { id } = useParams();
+  const router = useRouter();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     async function loadArticle() {
-      const data = await fetchArticleById(id as string)
+      const data = await fetchArticleById(id as string);
       if (data) {
-        setTitle(data.title)
-        setContent(data.content)
+        setTitle(data.title);
+        setContent(data.content);
       }
     }
-    loadArticle()
-  }, [id])
+    loadArticle();
+  }, [id]);
 
   const handleUpdate = async () => {
-    await updateArticle(id as string, { title: title, content: content })
-    router.push(`/my-articles/${id}`)
-  }
+    await updateArticle(id as string, { title, content });
+    router.push(`/my-articles/${id}`);
+  };
 
   return (
     <Card>
@@ -37,7 +43,14 @@ export default function EditArticlePage() {
       </CardHeader>
       <CardContent className="space-y-4">
         <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={10} />
+        {content && (
+          <MDXEditorWrapper
+            initialContent={content}
+            onChange={(val) => {
+              setContent(val);
+            }}
+          />
+        )}
       </CardContent>
       <CardFooter className="justify-between">
         <Button variant="outline" onClick={() => router.back()}>
@@ -46,5 +59,5 @@ export default function EditArticlePage() {
         <Button onClick={handleUpdate}>Guardar</Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

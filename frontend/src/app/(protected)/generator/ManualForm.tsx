@@ -1,41 +1,52 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { createArticle } from "@/lib/api/articles"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { createArticle } from "@/lib/api/articles";
+import MDXEditorWrapper from "@/components/MDXEditorWrapper";
 
-export default function ManualForm({ onSwitchToAI }: { onSwitchToAI: () => void }) {
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export default function ManualForm({
+  onSwitchToAI,
+}: {
+  onSwitchToAI: () => void;
+}) {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     try {
       const articleData = {
         title: title,
         content: content,
-      }
+      };
 
-      const createdArticle = await createArticle(articleData)
-      if (!createdArticle) throw new Error("Error al crear el artículo") 
-        
-      setTitle("")
-      setContent("")
-      alert("Artículo creado exitosamente")
+      const createdArticle = await createArticle(articleData);
+      if (!createdArticle) throw new Error("Error al crear el artículo");
+
+      setTitle("");
+      setContent("");
+      alert("Artículo creado exitosamente");
     } catch (err) {
-      console.error("Error al crear artículo:", err)
-      alert("Ocurrió un error al guardar el artículo")
+      console.error("Error al crear artículo:", err);
+      alert("Ocurrió un error al guardar el artículo");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -57,13 +68,9 @@ export default function ManualForm({ onSwitchToAI }: { onSwitchToAI: () => void 
           </div>
           <div className="space-y-2">
             <Label htmlFor="content">Contenido</Label>
-            <Textarea
-              id="content"
-              placeholder="Escribe tu contenido aquí..."
-              rows={10}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
+            <MDXEditorWrapper
+              initialContent={content}
+              onChange={(val) => setContent(val)}
             />
           </div>
         </CardContent>
@@ -77,5 +84,5 @@ export default function ManualForm({ onSwitchToAI }: { onSwitchToAI: () => void 
         </CardFooter>
       </Card>
     </form>
-  )
+  );
 }
