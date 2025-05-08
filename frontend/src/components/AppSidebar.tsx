@@ -62,7 +62,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar collapsible="icon" className="bg-background -z-10" {...props}>
+    <Sidebar collapsible="icon" className="bg-background z-0" {...props}>
       <SidebarHeader className="bg-background flex-row items-center justify-center">
         <SidebarMenuButton
           onClick={handleClick}
