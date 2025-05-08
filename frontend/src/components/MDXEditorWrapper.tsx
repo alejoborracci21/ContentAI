@@ -39,7 +39,7 @@ console.log(theme)
   // Usar useMemo para memorizar el valor inicial del contenid
   const contentMemo = useMemo(() => initialContent, [initialContent]);
   return (
-    <div className="prose max-w-full border rounded-lg ">
+    <div className="prose dark:prose-invert max-w-full border rounded-lg z-50">
       <MDXEditor
         className={theme === 'dark' ? 'dark-editor' : 'light-editor'} 
         markdown={contentMemo}
