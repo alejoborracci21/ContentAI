@@ -54,10 +54,39 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
 
+  const [temaError, setTemaError] = useState("");
+  const [palabrasClaveError, setPalabrasClaveError] = useState("");
+
   const { toast } = useToast();
-  
+
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let hasError = false;
+
+    if (!tema.trim()) {
+      setTemaError("El tema no puede estar vacío.");
+      hasError = true;
+    } else if (tema.trim().length < 5) {
+      setTemaError("El tema debe tener al menos 5 caracteres.");
+      hasError = true;
+    } else {
+      setTemaError("");
+    }
+
+    if (!palabrasClave.trim()) {
+      setPalabrasClaveError("Las palabras clave no pueden estar vacías.");
+      hasError = true;
+    } else if (palabrasClave.trim().length < 5) {
+      setPalabrasClaveError(
+        "Las palabras clave deben tener al menos 5 caracteres."
+      );
+      hasError = true;
+    } else {
+      setPalabrasClaveError("");
+    }
+    if (hasError) return;
+
     setIsGenerating(true);
     try {
       const result = await createArticlesWithIA({
@@ -66,7 +95,6 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
         tonoTexto,
         Longitud: longitud,
       });
-      console.log({ tema, palabrasClave, tonoTexto, longitud });
 
       const content = result.content ?? JSON.stringify(result);
       setGeneratedContent(content);
@@ -222,76 +250,92 @@ export default function IAform({ onSwitchToAI }: { onSwitchToAI: () => void }) {
           <CardTitle>Generar con IA</CardTitle>
           <CardDescription>Configura los parámetros</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="topic">Tema del artículo</Label>
-            <Input
-              id="topic"
-              required
-              placeholder="Ej: Inteligencia Artificial"
-              value={tema}
-              onChange={(e) => setTema(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="keywords">Palabras clave</Label>
-            <Input
-              id="keywords"
-              placeholder="Ej: IA, modelos, GPT"
-              value={palabrasClave}
-              onChange={(e) => setPalabrasClave(e.target.value)}
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <fieldset
+          disabled={isGenerating}
+          className={`space-y-4  transition-opacity ${
+            isGenerating ? "animate-pulse" : ""
+          }`}
+        >
+          <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="tone">Tono</Label>
-              <Select value={tonoTexto} onValueChange={setTonoTexto}>
-                <SelectTrigger id="tone">
-                  <SelectValue placeholder="Tono" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="formal">Formal</SelectItem>
-                  <SelectItem value="friendly">Amigable</SelectItem>
-                  <SelectItem value="technical">Técnico</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="topic">Tema del artículo</Label>
+              <Input
+                id="topic"
+                placeholder="Ej: Inteligencia Artificial"
+                value={tema}
+                onChange={(e) => setTema(e.target.value)}
+                className={temaError ? "border-red-500 focus:ring-red-500" : ""}
+              />
+              {temaError && <p className="text-red-500 text-sm">{temaError}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="format">Formato (opcional)</Label>
-              <Select value={formato} onValueChange={setFormato}>
-                <SelectTrigger id="format">
-                  <SelectValue placeholder="Formato" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="guide">Guía</SelectItem>
-                  <SelectItem value="list">Lista</SelectItem>
-                  <SelectItem value="comparison">Comparativa</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="keywords">Palabras clave</Label>
+              <Input
+                id="keywords"
+                placeholder="Ej: IA, modelos, GPT"
+                value={palabrasClave}
+                onChange={(e) => setPalabrasClave(e.target.value)}
+                className={
+                  palabrasClaveError ? "border-red-500 focus:ring-red-500" : ""
+                }
+              />
+              {palabrasClaveError && (
+                <p className="text-red-500 text-sm">{palabrasClaveError}</p>
+              )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="length">Longitud</Label>
-              <Select value={longitud} onValueChange={setLongitud}>
-                <SelectTrigger id="length">
-                  <SelectValue placeholder="Longitud" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="short">Corta</SelectItem>
-                  <SelectItem value="medium">Media</SelectItem>
-                  <SelectItem value="long">Larga</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="tone">Tono</Label>
+                <Select value={tonoTexto} onValueChange={setTonoTexto}>
+                  <SelectTrigger disabled={isGenerating} id="tone">
+                    <SelectValue placeholder="Tono" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="formal">Formal</SelectItem>
+                    <SelectItem value="friendly">Amigable</SelectItem>
+                    <SelectItem value="technical">Técnico</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="format">Formato (opcional)</Label>
+                <Select value={formato} onValueChange={setFormato}>
+                  <SelectTrigger disabled={isGenerating} id="format">
+                    <SelectValue placeholder="Formato" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="guide">Guía</SelectItem>
+                    <SelectItem value="list (numered and bulleted)">
+                      Lista
+                    </SelectItem>
+                    <SelectItem value="comparison">Comparativa</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="length">Longitud</Label>
+                <Select value={longitud} onValueChange={setLongitud}>
+                  <SelectTrigger disabled={isGenerating} id="length">
+                    <SelectValue placeholder="Longitud" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="short">Corta</SelectItem>
+                    <SelectItem value="medium">Media</SelectItem>
+                    <SelectItem value="very long">Larga</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" type="button" onClick={onSwitchToAI}>
-            Escribir un artículo
-          </Button>
-          <Button type="submit" disabled={isGenerating}>
-            {isGenerating ? "Generando..." : "Generar"}
-          </Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" type="button" onClick={onSwitchToAI}>
+              Escribir un artículo
+            </Button>
+            <Button type="submit">
+              {isGenerating ? "Generando..." : "Generar"}
+            </Button>
+          </CardFooter>
+        </fieldset>
       </Card>
     </form>
   );
