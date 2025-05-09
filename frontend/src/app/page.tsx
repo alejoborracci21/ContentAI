@@ -13,6 +13,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 import {
   Zap,
@@ -117,24 +123,48 @@ export default function LandingPage() {
               >
                 Comenzar
               </Button>
-              <Button variant="outline" size="icon" className="md:hidden ml-4">
-                <span className="sr-only">Menú</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-6 w-6"
-                >
-                  <line x1="4" x2="20" y1="12" y2="12" />
-                  <line x1="4" x2="20" y1="6" y2="6" />
-                  <line x1="4" x2="20" y1="18" y2="18" />
-                </svg>
-              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="md:hidden ml-4"
+                  >
+                    <span className="sr-only">Menú</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-6 w-6"
+                    >
+                      <line x1="4" x2="20" y1="12" y2="12" />
+                      <line x1="4" x2="20" y1="6" y2="6" />
+                      <line x1="4" x2="20" y1="18" y2="18" />
+                    </svg>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link href="#caracteristicas">Características</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="#descubre">Descubre</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/contact">Contacto</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleClick}>
+                    Comenzar
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>
@@ -145,30 +175,43 @@ export default function LandingPage() {
             <div className="container px-4 md:px-6">
               <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
                 <div className="flex flex-col justify-center space-y-4">
-                  <div className="space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none dark:text-white">
-                      Genera blogs en segundos con IA
-                    </h1>
-                    <p className="max-w-[600px] text-muted-foreground md:text-xl dark:text-gray-400">
-                      Crea contenido SEO-friendly, atractivo y único en un clic
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-2 min-[400px]:flex-row md:mx-0 mx-auto">
-                    <Button
-                      size="lg"
-                      className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 p-0"
-                    >
-                      <Link
-                        href={"/articles"}
-                        className="p-2.5 px-5 text-white"
+                  <div className="flex gap-2 ">
+                    <div className="w-1/2 md:min-w-52">
+                      <Image
+                        priority
+                        src="/icon3.png"
+                        width={200}
+                        height={200}
+                        alt="Logo ContenAI Ilustración"
+                        className="rounded-lg dark:invert-0 invert drop-shadow-lg  "
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none dark:text-white">
+                        Genera blogs en segundos con IA
+                      </h1>
+                      <p className="max-w-[600px] font-semibold   text-foreground md:text-xl dark:text-gray-200">
+                        Crea contenido SEO-friendly, atractivo y único en un
+                        clic
+                      </p>
+                      <Button
+                        size="lg"
+                        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 p-0"
                       >
-                        Empieza gratis
-                      </Link>
-                    </Button>
+                        <Link
+                          href={"/articles"}
+                          className="p-2.5 px-5 text-white"
+                        >
+                          Empieza gratis
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center justify-center">
                   <Image
+                    priority
                     src="/AIwritter.png"
                     width={600}
                     height={600}
