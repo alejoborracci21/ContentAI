@@ -28,13 +28,12 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-
 import { Eye, Trash2, Search } from "lucide-react";
 import { myArticles, deleteArticle, Article } from "@/lib/api/articles";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
-// Formatea "YYYY-MM-DD..." a "dd 'de' MMMM yyyy" (e.g., "05 de mayo 2025")
+// Formatea "YYYY-MM-DD..." a "dd 'de' MMMM yyyy"
 const formatDate = (dateString: string): string =>
   format(new Date(dateString), "dd 'de' MMMM yyyy", { locale: es });
 
@@ -50,16 +49,22 @@ export default function HistoryPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const res = await myArticles();
-        setArticles(res);
-      } catch (error) {
-        console.error("Error al cargar artículos:", error);
-      }
-    };
-    fetchArticles();
-  }, []);
+  const fetchAndSort = async () => {
+    try {
+      const res = await myArticles();
+      // Ordena por timestamp (incluye hora), del más reciente al más antiguo
+      const sorted = res.sort((a, b) => {
+        const timeA = Date.parse(a.creationDate || "");
+        const timeB = Date.parse(b.creationDate || "");
+        return timeB - timeA;
+      });
+      setArticles(sorted);
+    } catch (error) {
+      console.error("Error al cargar artículos:", error);
+    }
+  };
+  fetchAndSort();
+}, []);
 
   const filteredArticles = articles.filter((article) => {
     const matchesSearch = article.title
@@ -186,6 +191,7 @@ export default function HistoryPage() {
           </div>
         </CardContent>
       </Card>
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
