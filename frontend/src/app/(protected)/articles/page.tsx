@@ -35,7 +35,15 @@ export default function ArticlesPage() {
   useEffect(() => {
     const loadArticles = async () => {
       const data = await fetchArticles()
-      setArticles(data)
+
+      // Ordenamos por fecha de publicación, del más reciente al más antiguo
+      const sorted = data.sort((a, b) => {
+        const dateA = a.publicationDate ? new Date(a.publicationDate).getTime() : 0
+        const dateB = b.publicationDate ? new Date(b.publicationDate).getTime() : 0
+        return dateB - dateA
+      })
+
+      setArticles(sorted)
     }
     loadArticles()
   }, [])
