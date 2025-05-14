@@ -33,7 +33,6 @@ export default function ProfilePage() {
   const handleClick = () => {
     signOut(auth)
       .then(() => {
-        console.log("Sesión cerrada con éxito")
         router.push("/login")
       })
       .catch((error) => {

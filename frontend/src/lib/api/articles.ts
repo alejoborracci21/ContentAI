@@ -1,46 +1,151 @@
+import { getFirebaseToken } from "../getFirebaseToken";
+
 export interface Article {
-    id: string
-    titulo: string
-    autor: string
-    contenido: string
-    date?: string
-  }
+  id: string;
+  title: string;
+  author: string;
+  content: string;
+  creationDate?: string;
+  publicationDate?: string;
+}
 
-  const url = process.env.NEXT_PUBLIC_BACKEND_URL
-  
-  export async function fetchArticles(): Promise<Article[]> {
-    try {
-      const res = await fetch(`${url}/articulo/listaArticulos`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-  
-      if (!res.ok) throw new Error("Error al obtener artículos")
-  
-      const data = await res.json()
-      console.log("Data:", data)
-      return data
-    } catch (error) {
-      console.error("Error en fetchArticles:", error)
-      return []
-    }
-  }
-  
+const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-  export async function fetchArticleById(id: string | number): Promise<Article | null> {
-    try {
-      const res = await fetchArticles()
-      const article = res.find((article) => String(article.id) === String(id))
-  
-      if (!res) throw new Error("Error al obtener el artículo")
-  
-      console.log("Article:", article)
-      return article || null
-    } catch (error) {
-      console.error("Error en fetchArticleById:", error)
-      return null
-    }
+export async function fetchArticles(): Promise<Article[]> {
+  const token = await getFirebaseToken();
+  if (!token) return [];
+
+  try {
+    const res = await fetch(`${url}/articulo/listaArticulos`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error("Error al obtener artículos");
+    return await res.json();
+  } catch (error) {
+    console.error("Error en fetchArticles:", error);
+    return [];
   }
+}
+
+export async function fetchArticleById(id: string | number): Promise<Article | null> {
+  const token = await getFirebaseToken();
+
+  if (!token) return null;
+  console.log("Token:", token);
+  const res = await fetch(`${url}/articulo/obtenerArticulo?id=${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Error al obtener artículo");
+  const data = await res.json();
+  return data[0] || null;
+}
+
+export async function myArticles(): Promise<Article[]> {
+  const token = await getFirebaseToken();
+
+  if (!token) return [];
+
+  const res = await fetch(`${url}/articulo/articulos`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) return [];
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+}
+
+export async function createArticle(data: { title: string; content: string }) {
+  const token = await getFirebaseToken();
+  if (!token) throw new Error("Usuario no autenticado");
+
+  const res = await fetch(`${url}/articulo/createArticulo`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Error al crear artículo");
+  return await res.json();
+}
+
+export async function createArticlesWithIA(data: { tema: string; palabrasClave: string, tonoTexto: string, Longitud: string }) { 
+  const token = await getFirebaseToken();
+
+  if (!token) throw new Error("Usuario no autenticado");
+
+  const res = await fetch(`${url}/articulo/createArticulo/ia`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body:JSON.stringify(data)
+  });
+
+  if (!res.ok) throw new Error("Error al crear artículo con IA");
+  return await res.json();
+}
+
+
+export async function updateArticle(id: string, data: { title: string; content: string }) {
+  const token = await getFirebaseToken();
+  if (!token) throw new Error("Usuario no autenticado");
+
+  const res = await fetch(`${url}/articulo/actualizarArticulo?id=${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Error al actualizar artículo");
+  return await res.json();
+}
+
+export async function deleteArticle(id: string) {
+  const token = await getFirebaseToken();
+  if (!token) throw new Error("Usuario no autenticado");
+
+  const res = await fetch(`${url}/articulo/eliminarArticulo?id=${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Error al eliminar artículo");
+  return true;
+}
+
+
+export async function publishArticle(id: string) {
+  const token = await getFirebaseToken();
+  if (!token) throw new Error("Usuario no autenticado");
+
+  const res = await fetch(`${url}/articulo/publicarArticulo?id=${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Error al publicar artículo");
+  return await res.json();
+}

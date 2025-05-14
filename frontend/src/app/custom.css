@@ -1,0 +1,283 @@
+@import url("@radix-ui/colors/blue-dark.css"); /* Cambiado */
+@import url("@radix-ui/colors/mauve-dark.css");
+
+/* Estilos para el modo claro */
+.light-editor {
+  --accentBase: hsl(217.2 91.2% 59.8%);
+  --accentText: hsl(0 0% 98%);
+  --baseText: hsl(0 40% 8%);
+  --basePageBg: hsl(0 0% 100%);
+  background-color: var(--basePageBg);
+  color: var(--baseText);
+}
+
+.dark-editor {
+  --accentBase: 217.2 91.2% 59.8%;
+  --accentText: 210 40% 98%;
+  --baseText: hsl(210 40% 98%);
+  --basePageBg: hsl(222.2 84% 4.9%);
+  background-color: var(--basePageBg);
+  color: var(--baseText);
+  /* Forzar color en los elementos comunes */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b,
+  u,
+  i,
+  em,
+  blockquote,
+  p,
+  span,
+  li,
+  th,
+  td {
+    color: var(--baseText);
+  }
+
+  /* Enlaces */
+  a {
+    color: var(--accentText) !important;
+  }
+  button {
+    color: var(--accentText) !important;
+  }
+}
+
+/* Tooltips e íconos */
+.mdxeditor-popup-container {
+  background-color: var(--accentPageBg);
+  color: var(--baseText);
+  @apply outline outline-1 outline-blue-600 rounded-xl shadow-xl mx-auto overflow-hidden;
+}
+.dark .mdxeditor-popup-container {
+  background-color: var(--accentPageBg);
+  color: var(--baseText);
+  @apply outline outline-1 outline-blue-600 rounded-xl shadow-xl mx-auto overflow-hidden;
+}
+.dark .mdxeditor-popup-container button {
+  background-color: var(--accentPageBg);
+  color: var(--baseText);
+  @apply hover:bg-blue-700/50;
+}
+.dark-editor ._tooltipContent_sects_681 {
+  @apply bg-gray-800 text-white rounded-md shadow-lg z-50 transition-opacity duration-150;
+}
+
+.dark-editor ._tooltipContent_sects_681[data-state="delayed-open"] {
+  @apply opacity-100;
+}
+
+.dark-editor ._tooltipContent_sects_681 span {
+  @apply sr-only; /* Equivale al estilo de accesibilidad (screen-reader only) */
+}
+.dark-editor [role="dialog"] {
+  @apply overflow-hidden border-none border-slate-600 bg-slate-800  rounded-lg shadow-lg text-white;
+}
+
+.dark-editor [role="toolbar"] {
+  @apply bg-slate-800 border-none outline-none  text-white;
+}
+.dark-editor [role="toolbar"] button {
+  @apply hover:bg-slate-700;
+}
+.dark-editor [role="toolbar"] button span svg {
+  @apply text-blue-100;
+}
+
+.dark-editor button[data-state="on"] {
+  @apply bg-slate-950 text-blue-100 hover:bg-slate-900;
+}
+
+.dark-editor svg {
+  @apply fill-current;
+}
+
+.dark-editor ._popoverArrow_sects_650 {
+  fill: #1e3a8a; /* Azul oscuro */
+}
+
+.light-editor table {
+  @apply outline outline-1 outline-slate-300 rounded-xl shadow-xl shadow-slate-400/50 mx-auto overflow-hidden;
+  width: 90%;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.dark-editor table {
+  @apply outline outline-1 outline-slate-600 rounded-xl shadow-xl shadow-slate-700/50 mx-auto overflow-hidden;
+  width: 90%;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+.light-editor table button {
+  font-weight: bold;
+}
+
+.dark-editor table button {
+  @apply text-white  hover:bg-[#1b1b1b] opacity-100;
+}
+
+.dark-editor table th {
+  background-color: #2c2c2c;
+  font-weight: bold;
+}
+
+.dark-editor table th [data-tool-cell="true"] {
+  background-color: #333;
+}
+
+.dark-editor table tr:nth-child(even) {
+  background-color: #262626;
+}
+
+.dark-editor table tr:hover {
+  background-color: #333;
+}
+
+.dark-editor ._tableEditor_sects_714 ._tableColumnEditorTrigger_sects_744,
+._tableEditor_sects_714 ._tableRowEditorTrigger_sects_745,
+._tableEditor_sects_714 ._addRowButton_sects_746,
+._tableEditor_sects_714 ._addColumnButton_sects_747,
+._tableEditor_sects_714 ._iconButton_sects_457 {
+  opacity: 100 !important;
+}
+
+.light-editor table ._addColumnButton_sects_747,
+.light-editor table ._addRowButton_sects_746 {
+  @apply bg-[#FFFFFF] hover:bg-[#F0F0F3];
+}
+
+.dark-editor table ._addColumnButton_sects_747,
+.dark-editor table ._addRowButton_sects_746 {
+  @apply bg-[#262626] hover:bg-[#1B1B1B];
+}
+
+.dark-editor ._codeMirrorWrapper_sects_392 {
+  @apply bg-gray-900 border border-gray-700 rounded-md overflow-hidden;
+}
+
+.dark-editor ._codeMirrorToolbar_sects_409 {
+  @apply bg-gray-800 border-gray-700 text-white;
+}
+.dark-editor ._codeMirrorToolbar_sects_409 button {
+  @apply hover:cursor-pointer;
+}
+.dark-editor ._tooltipTrigger_sects_677 button,
+.dark-editor ._iconButton_sects_457 {
+  @apply text-white hover:text-gray-300 transition-colors;
+}
+
+.dark-editor ._selectTrigger_sects_308 {
+  @apply bg-gray-700 border border-gray-600 rounded-md text-sm text-white cursor-pointer hover:bg-gray-600;
+}
+
+.dark-editor .cm-editor {
+  @apply bg-gray-900 text-white;
+}
+.light-editor .cm-editor {
+  @apply bg-gray-100/60;
+}
+
+.dark-editor .cm-gutters {
+  @apply bg-gray-700  border-r border-gray-700;
+}
+
+.dark-editor .cm-activeLine {
+  @apply bg-gray-800;
+}
+
+.dark-editor .ͼo .cm-activeLineGutter {
+  @apply bg-slate-800 !important;
+}
+
+.dark-editor .cm-cursor {
+  @apply border-white;
+}
+.dark-editor .cm-editor {
+  @apply bg-[#1e1e1e] text-gray-100 text-sm rounded-md overflow-auto;
+}
+
+/* Etiquetas HTML: <div> */
+.dark-editor .cm-line .ͼ13 {
+  @apply text-red-300;
+}
+
+/* Nombre de etiquetas: div, p, html, button */
+.dark-editor .cm-line .ͼ11 {
+  @apply text-green-200 !important;
+}
+
+/* Atributos: type, onclick, id */
+.dark-editor .cm-line .ͼ14 {
+  @apply text-blue-300;
+}
+
+/* Signos =, . , () */
+.dark-editor .cm-line .ͼ10 {
+  @apply text-gray-300;
+}
+
+/* Strings: "demo", 'Hello' */
+.dark-editor .cm-line .ͼ17 {
+  @apply text-yellow-200;
+}
+
+/* Métodos JS: getElementById, innerHTML */
+.dark-editor .cm-line .ͼq {
+  @apply text-purple-300;
+}
+
+/* Objetos JS: document */
+.dark-editor .cm-line .ͼr {
+  @apply text-orange-300;
+}
+
+/* Paréntesis de método ( ) */
+.dark-editor .cm-line .cm-matchingBracket {
+  @apply text-cyan-200;
+}
+
+/* Línea activa */
+.dark-editor .cm-editor .cm-activeLine {
+  @apply bg-[#2a2a2a];
+}
+
+/* Estilo del dropdown que se despliega al elegir lenguaje */
+.dark-editor [role="listbox"] {
+  @apply bg-gray-800 text-white border border-gray-700 rounded-md shadow-lg z-50;
+}
+
+/* Estilo de cada opción del dropdown */
+.dark-editor [role="option"] {
+  @apply cursor-pointer hover:bg-gray-700 text-sm;
+}
+
+/* Opción activa o seleccionada */
+.dark-editor [aria-selected="true"] {
+  @apply bg-gray-700;
+}
+/* Opción seleccionada en el dropdown */
+.dark-editor [role="option"][aria-selected="true"] {
+  @apply bg-gray-700 text-white !important;
+}
+/* Para íconos o elementos ocultos en accesibilidad */
+.dark-editor [aria-hidden="true"] {
+  @apply text-white; /* Asegura que íconos ocultos no estén visibles en blanco en modo dark */
+}
+
+/* Y para mejorar consistencia, el hover normal en otras opciones */
+.dark-editor [role="option"]:hover {
+  @apply bg-gray-600 text-white;
+}
+
+[role="option"][data-highlighted],
+[role="option"][data-state="checked"],
+[role="option"][aria-selected="true"] {
+  @apply bg-gray-700 text-white !important;
+}
